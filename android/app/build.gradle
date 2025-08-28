@@ -1,0 +1,45 @@
+// Top-level build file for Android app module (Groovy syntax, Flutter compatible)
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "com.google.gms.google-services"
+
+android {
+    compileSdkVersion 34
+    ndkVersion "27.0.12077973"
+    namespace "com.yourcompany.multisales"
+
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword "your_keystore_password"
+            keyAlias "your_key_alias"
+            keyPassword "your_key_password"
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.multisales.app"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            // ...other release config...
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+// No flutter block needed

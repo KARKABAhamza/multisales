@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiSales Firebase - Guide d'Intégration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .success {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+        .badge {
+            background-color: #007bff;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 MultiSales Firebase - Configuration Complète</h1>
+
+        <div class="success">
+            <strong>✅ Configuration Terminée!</strong> Firebase est maintenant entièrement intégré dans votre application MultiSales avec Analytics, Authentication, Firestore, et Storage.
+        </div>
+
+        <h2>📋 Configuration Firebase Actuelle</h2>
+        <div class="code-block">
+const firebaseConfig = {
+  apiKey: "AIzaSyBz4EfU40riAMXt3sdKFFFq5Lc_X5W6WGQ",
+  authDomain: "multisales-18e57.firebaseapp.com",
+  databaseURL: "https://multisales-18e57-default-rtdb.firebaseio.com",
+  projectId: "multisales-18e57",
+  storageBucket: "multisales-18e57.firebasestorage.app",
+  messagingSenderId: "967872205422",
+  appId: "1:967872205422:web:b16f6c6b6d6cedc5464c7f",
+  measurementId: "G-3DB4WDLJ7X"
+};
+        </div>
+
+        <h2>🚀 Services Firebase Intégrés</h2>
+        <ul>
+            <li><span class="badge">✅</span> <strong>Authentication</strong> - Connexion/Inscription avec email/mot de passe</li>
+            <li><span class="badge">✅</span> <strong>Firestore</strong> - Base de données pour profils utilisateurs</li>
+            <li><span class="badge">✅</span> <strong>Storage</strong> - Stockage de fichiers</li>
+            <li><span class="badge">✅</span> <strong>Analytics</strong> - Suivi des événements utilisateur</li>
+            <li><span class="badge">✅</span> <strong>Messaging</strong> - Notifications push</li>
+        </ul>
+
+        <h2>📊 Analytics - Événements Suivis</h2>
+        <div class="highlight">
+            <strong>Événements automatiquement trackés:</strong>
+            <ul>
+                <li><strong>login</strong> - Connexion utilisateur</li>
+                <li><strong>sign_up</strong> - Inscription utilisateur</li>
+                <li><strong>onboarding_start</strong> - Début onboarding</li>
+                <li><strong>onboarding_progress</strong> - Progression onboarding</li>
+                <li><strong>onboarding_complete</strong> - Fin onboarding</li>
+                <li><strong>training_module_start</strong> - Début module formation</li>
+                <li><strong>training_module_complete</strong> - Fin module formation</li>
+                <li><strong>screen_view</strong> - Visite de pages</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ Utilisation dans le Code Flutter</h2>
+        <h3>Service Analytics</h3>
+        <div class="code-block">
+// Obtenir le service Analytics
+final analyticsService = AnalyticsService();
+
+// Suivre un événement personnalisé
+await analyticsService.logCustomEvent(
+  eventName: 'feature_used',
+  parameters: {'feature_name': 'export_data'},
+);
+
+// Définir les propriétés utilisateur
+await analyticsService.setUserProperties(
+  userId: user.uid,
+  userRole: 'manager',
+  department: 'sales',
+);
+        </div>
+
+        <h3>Service Authentication</h3>
+        <div class="code-block">
+// Le service Auth intègre automatiquement Analytics
+final authService = AuthService();
+
+// Inscription (track automatique)
+final result = await authService.signUpWithEmailAndPassword(
+  email,
+  password,
+  firstName: firstName,
+  lastName: lastName,
+);
+
+// Connexion (track automatique)
+final result = await authService.signInWithEmailAndPassword(
+  email,
+  password,
+);
+        </div>
+
+        <h2>🌐 Configuration Web JavaScript</h2>
+        <p>Pour une intégration web pure JavaScript, utilisez le fichier <code>web/firebase-config.js</code>:</p>
+        <div class="code-block">
+import { firebaseServices } from './firebase-config.js';
+
+// Connexion
+const user = await firebaseServices.signInWithEmail(email, password);
+
+// Ajouter un document
+await firebaseServices.addDocument('users', userData);
+
+// Upload fichier
+await firebaseServices.uploadFile('profiles/user.jpg', file);
+
+// Log événement
+firebaseServices.logEvent('custom_event', { parameter: 'value' });
+        </div>
+
+        <h2>📱 Plateformes Supportées</h2>
+        <ul>
+            <li><strong>Web</strong> - Configuration complète avec Analytics</li>
+            <li><strong>Android</strong> - Configuration native</li>
+            <li><strong>iOS</strong> - Configuration native</li>
+            <li><strong>Windows</strong> - Configuration desktop</li>
+            <li><strong>macOS</strong> - Configuration desktop</li>
+        </ul>
+
+        <h2>🔒 Sécurité Firestore</h2>
+        <div class="highlight">
+            <strong>Règles de sécurité recommandées:</strong>
+        </div>
+        <div class="code-block">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Règles pour les profils utilisateurs
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Règles pour les données d'onboarding
+    match /onboarding_progress/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+        </div>
+
+        <h2>📈 Monitoring et Debug</h2>
+        <ul>
+            <li><strong>Firebase Console</strong> - <a href="https://console.firebase.google.com/project/multisales-18e57" target="_blank">https://console.firebase.google.com/project/multisales-18e57</a></li>
+            <li><strong>Analytics</strong> - Événements visibles dans Firebase Analytics</li>
+            <li><strong>Authentication</strong> - Utilisateurs visibles dans Firebase Auth</li>
+            <li><strong>Firestore</strong> - Documents visibles dans Firestore Database</li>
+        </ul>
+
+        <h2>⚡ Commandes Utiles</h2>
+        <div class="code-block">
+# Reconfigurer Firebase
+flutterfire configure --project=multisales-18e57
+
+# Lancer l'app en mode debug
+flutter run -d chrome
+
+# Build pour production
+flutter build web --release
+
+# Analyser le code
+flutter analyze
+
+# Tests
+flutter test
+        </div>
+
+        <div class="success">
+            <strong>🎉 Félicitations!</strong> Votre application MultiSales est maintenant équipée d'une intégration Firebase complète avec Analytics, Authentication, Firestore, et plus encore. Vous pouvez maintenant exploiter toute la puissance des SDKs Firebase pour votre plateforme d'onboarding!
+        </div>
+    </div>
+</body>
+</html>

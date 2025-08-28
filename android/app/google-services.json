@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "967872205422",
+    "firebase_url": "https://multisales-18e57-default-rtdb.firebaseio.com",
+    "project_id": "multisales-18e57",
+    "storage_bucket": "multisales-18e57.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967872205422:android:58aec166cee7050d464c7f",
+        "android_client_info": {
+          "package_name": "com.multisales.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "967872205422-tp6g10m8d504t0tleoqp6t4u5cuflsms.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjwLLMPdBS6MbYCsOSq1_08zNWfa9qXT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "967872205422-tp6g10m8d504t0tleoqp6t4u5cuflsms.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

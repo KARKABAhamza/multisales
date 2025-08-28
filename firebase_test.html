@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiSales - Test Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #4CAF50;
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #f44336;
+            background: #fdeaea;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #2196F3;
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .service-status {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .active {
+            background: #4CAF50;
+            color: white;
+        }
+        .inactive {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 MultiSales Firebase Integration Test</h1>
+
+        <div class="info">
+            <h3>Configuration Firebase</h3>
+            <p><strong>Project ID:</strong> multisales-18e57</p>
+            <p><strong>Analytics ID:</strong> G-3DB4WDLJ7X</p>
+            <p><strong>Environment:</strong> Development</p>
+        </div>
+
+        <div id="status">
+            <h3>État des Services Firebase</h3>
+            <div id="services-status"></div>
+        </div>
+
+        <div>
+            <h3>Tests d'Intégration</h3>
+            <button onclick="testAnalytics()">Test Analytics</button>
+            <button onclick="testAuth()">Test Authentication</button>
+            <button onclick="testFirestore()">Test Firestore</button>
+            <button onclick="testRemoteConfig()">Test Remote Config</button>
+            <button onclick="testPerformance()">Test Performance</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-remote-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-performance.js"></script>
+
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBz4EfU40riAMXt3sdKFFFq5Lc_X5W6WGQ",
+            authDomain: "multisales-18e57.firebaseapp.com",
+            projectId: "multisales-18e57",
+            storageBucket: "multisales-18e57.appspot.com",
+            messagingSenderId: "967872205422",
+            appId: "1:967872205422:web:your-app-id",
+            measurementId: "G-3DB4WDLJ7X"
+        };
+
+        // Initialisation Firebase
+        let app, analytics, auth, firestore, remoteConfig, performance;
+
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            analytics = firebase.analytics();
+            auth = firebase.auth();
+            firestore = firebase.firestore();
+            remoteConfig = firebase.remoteConfig();
+            performance = firebase.performance();
+
+            logResult('✅ Firebase initialisé avec succès!', 'success');
+            updateServicesStatus();
+
+            // Analytics: Track page view
+            analytics.logEvent('page_view', {
+                page_title: 'Firebase Test Page',
+                page_location: window.location.href
+            });
+
+        } catch (error) {
+            logResult('❌ Erreur d\'initialisation Firebase: ' + error.message, 'error');
+        }
+
+        function updateServicesStatus() {
+            const servicesDiv = document.getElementById('services-status');
+            const services = [
+                { name: 'Analytics', active: !!analytics },
+                { name: 'Authentication', active: !!auth },
+                { name: 'Firestore', active: !!firestore },
+                { name: 'Remote Config', active: !!remoteConfig },
+                { name: 'Performance', active: !!performance }
+            ];
+
+            servicesDiv.innerHTML = services.map(service =>
+                `<span class="service-status ${service.active ? 'active' : 'inactive'}">
+                    ${service.name}: ${service.active ? 'Actif' : 'Inactif'}
+                </span>`
+            ).join('');
+        }
+
+        function logResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = message;
+            resultsDiv.appendChild(messageDiv);
+        }
+
+        function testAnalytics() {
+            try {
+                analytics.logEvent('test_analytics', {
+                    timestamp: Date.now(),
+                    test_type: 'manual',
+                    user_action: 'button_click'
+                });
+                logResult('✅ Analytics: Événement de test envoyé avec succès', 'success');
+            } catch (error) {
+                logResult('❌ Analytics: Erreur - ' + error.message, 'error');
+            }
+        }
+
+        function testAuth() {
+            try {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        logResult('✅ Authentication: Utilisateur connecté - ' + user.email, 'success');
+                    } else {
+                        logResult('ℹ️ Authentication: Aucun utilisateur connecté', 'info');
+                    }
+                });
+                logResult('✅ Authentication: Listener d\'état configuré', 'success');
+            } catch (error) {
+                logResult('❌ Authentication: Erreur - ' + error.message, 'error');
+            }
+        }
+
+        function testFirestore() {
+            try {
+                // Test de lecture d'une collection
+                firestore.collection('test').limit(1).get()
+                    .then((snapshot) => {
+                        logResult('✅ Firestore: Connexion réussie - ' + snapshot.size + ' document(s) trouvé(s)', 'success');
+                    })
+                    .catch((error) => {
+                        logResult('⚠️ Firestore: Connexion OK mais erreur de lecture - ' + error.message, 'info');
+                    });
+            } catch (error) {
+                logResult('❌ Firestore: Erreur de connexion - ' + error.message, 'error');
+            }
+        }
+
+        function testRemoteConfig() {
+            try {
+                remoteConfig.settings = {
+                    minimumFetchIntervalMillis: 3600000,
+                };
+                remoteConfig.defaultConfig = {
+                    'test_feature': false,
+                    'app_version': '1.0.0'
+                };
+
+                remoteConfig.fetchAndActivate()
+                    .then(() => {
+                        const testFeature = remoteConfig.getValue('test_feature');
+                        logResult('✅ Remote Config: Configuration récupérée - test_feature: ' + testFeature.asBoolean(), 'success');
+                    })
+                    .catch((error) => {
+                        logResult('⚠️ Remote Config: Erreur de récupération - ' + error.message, 'info');
+                    });
+            } catch (error) {
+                logResult('❌ Remote Config: Erreur d\'initialisation - ' + error.message, 'error');
+            }
+        }
+
+        function testPerformance() {
+            try {
+                const trace = performance.trace('test_performance');
+                trace.start();
+
+                // Simulation d'une opération
+                setTimeout(() => {
+                    trace.stop();
+                    logResult('✅ Performance: Trace de test créé et arrêté', 'success');
+                }, 1000);
+
+            } catch (error) {
+                logResult('❌ Performance: Erreur - ' + error.message, 'error');
+            }
+        }
+
+        // Auto-test au chargement
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                logResult('🚀 Page de test Firebase chargée - Prêt pour les tests', 'info');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

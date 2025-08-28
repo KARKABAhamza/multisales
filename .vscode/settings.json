@@ -1,0 +1,6 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "github.copilot.chat.notebook.followCellExecution.enabled": true,
+    "notebook.defaultFormatter": "GitHub.copilot",
+    "githubPullRequests.experimental.useQuickChat": true
+}

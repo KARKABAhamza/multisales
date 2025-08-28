@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="MultiSales - Your comprehensive business onboarding platform">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="multisales, onboarding, business, training, sales">
+  <meta name="author" content="MultiSales Team">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="MultiSales">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Accessibility improvements -->
+  <meta name="theme-color" content="#2196F3">
+  <meta name="msapplication-TileColor" content="#2196F3">
+
+  <!-- Performance optimizations -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- PWA configurations -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>MultiSales - Business Onboarding Platform</title>
+
+  <!-- Handle deprecated features gracefully -->
+  <script>
+    // Suppress deprecation warnings for Intl.v8BreakIterator
+    if (typeof Intl !== 'undefined' && Intl.v8BreakIterator) {
+      console.warn('Using Intl.v8BreakIterator which is deprecated. Consider upgrading to a newer Flutter version that supports Intl.Segmenter.');
+    }
+
+    // Accessibility enhancements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add skip to main content link for screen readers
+      const skipLink = document.createElement('a');
+      skipLink.href = '#main-content';
+      skipLink.textContent = 'Skip to main content';
+      skipLink.className = 'sr-only sr-only-focusable';
+      skipLink.style.cssText = 'position: absolute; top: -40px; left: 6px; width: 1px; height: 1px; padding: 8px 16px; background: #000; color: #fff; text-decoration: none; z-index: 1000;';
+      skipLink.addEventListener('focus', function() {
+        this.style.top = '6px';
+        this.style.width = 'auto';
+        this.style.height = 'auto';
+      });
+      skipLink.addEventListener('blur', function() {
+        this.style.top = '-40px';
+        this.style.width = '1px';
+        this.style.height = '1px';
+      });
+      document.body.insertBefore(skipLink, document.body.firstChild);
+    });
+  </script>
+</head>
+<body>
+  <!-- Main content wrapper for accessibility -->
+  <div id="main-content" role="main" aria-label="MultiSales Application">
+    <script src="flutter_bootstrap.js" async></script>
+  </div>
+</body>
+</html>
