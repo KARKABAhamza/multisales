@@ -2,6 +2,12 @@
 
 <!-- CI status -->
 [![Flutter CI](https://github.com/KARKABAhamza/multisales/actions/workflows/flutter-ci.yml/badge.svg?branch=main)](https://github.com/KARKABAhamza/multisales/actions/workflows/flutter-ci.yml)
+<!-- CODACY BADGES START: replace placeholders after retrieving from Codacy project settings -->
+[![Codacy Grade](https://app.codacy.com/project/badge/Grade/REPLACE_WITH_CODACY_PROJECT_ID)](https://app.codacy.com/gh/KARKABAhamza/multisales/dashboard?utm_source=gh&utm_medium=referral&utm_content=KARKABAhamza/multisales&utm_campaign=Badge_Grade)
+[![Codacy Coverage](https://app.codacy.com/project/badge/Coverage/REPLACE_WITH_CODACY_BADGE_TOKEN)](https://app.codacy.com/gh/KARKABAhamza/multisales/dashboard?utm_source=gh&utm_medium=referral&utm_content=KARKABAhamza/multisales&utm_campaign=Badge_Coverage)
+<!-- CODACY BADGES END -->
+
+A multi-platform sales application built with Flutter and Firebase.
 
 A multi-platform sales application built with Flutter and Firebase.
 
@@ -130,3 +136,9 @@ lib/
 - Run `flutterfire configure` to generate platform-specific configurations
 - Make sure to update Firebase Security Rules before going to production
 - Consider using environment variables for sensitive configuration in production
+
+### Codacy badges notes
+
+- Replace `REPLACE_WITH_CODACY_PROJECT_ID` with the ID from Codacy Project Settings → Badges (Grade badge).
+- Replace `REPLACE_WITH_CODACY_BADGE_TOKEN` with the Coverage badge token from Codacy (Project Settings → Coverage → Badges).
+- Badges will render once the Codacy workflows run and tokens are set in GitHub secrets as described in `.github/workflows/*codacy*.yml`.
