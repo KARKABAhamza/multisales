@@ -1,0 +1,16 @@
+name: multisales
+description: B2B Multi-Category Sourcing and Procurement Platform - Simplifies purchasing and resale of industrial, hotel, and consumable materials
+version: 1.0.0
+homepage: https://github.com/KARKABAhamza/multisales
+
+environment:
+  sdk: '>=2.19.0 <4.0.0'
+
+dependencies:
+  # Add dependencies as needed
+  http: ^1.1.0
+  intl: ^0.18.0
+
+dev_dependencies:
+  lints: ^2.1.0
+  test: ^1.24.0
