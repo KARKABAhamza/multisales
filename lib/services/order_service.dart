@@ -58,11 +58,11 @@ class OrderService {
     return _orders.values.fold(0.0, (sum, order) => sum + order.totalAmount);
   }
 
-  /// Get orders within a date range
+  /// Get orders within a date range (inclusive)
   List<Order> getOrdersByDateRange(DateTime start, DateTime end) {
     return _orders.values
         .where((order) =>
-            order.orderDate.isAfter(start) && order.orderDate.isBefore(end))
+            !order.orderDate.isBefore(start) && !order.orderDate.isAfter(end))
         .toList();
   }
 }

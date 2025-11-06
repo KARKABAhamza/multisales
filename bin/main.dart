@@ -1,11 +1,11 @@
-import '../models/product.dart';
-import '../models/order.dart';
-import '../models/supplier.dart';
-import '../models/invoice.dart';
-import '../services/catalog_service.dart';
-import '../services/order_service.dart';
-import '../services/inventory_service.dart';
-import '../services/invoice_service.dart';
+import 'package:multisales/models/product.dart';
+import 'package:multisales/models/order.dart';
+import 'package:multisales/models/supplier.dart';
+import 'package:multisales/models/invoice.dart';
+import 'package:multisales/services/catalog_service.dart';
+import 'package:multisales/services/order_service.dart';
+import 'package:multisales/services/inventory_service.dart';
+import 'package:multisales/services/invoice_service.dart';
 
 void main() {
   print('=== MULTISALES - Plateforme B2B ===');
@@ -46,6 +46,11 @@ void main() {
   catalogService.addProduct(product1);
   catalogService.addProduct(product2);
   catalogService.addProduct(product3);
+  
+  // Initialize inventory for products
+  inventoryService.initializeStock(product1.id, product1.stockQuantity);
+  inventoryService.initializeStock(product2.id, product2.stockQuantity);
+  inventoryService.initializeStock(product3.id, product3.stockQuantity);
   
   print('Produits ajoutés au catalogue: ${catalogService.getProductCount()}');
   catalogService.listProducts();

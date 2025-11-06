@@ -35,8 +35,11 @@ class DocumentUtils {
   }
 
   /// Validate email format
+  /// Uses a more comprehensive regex that handles most common email formats
   static bool isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'
+    );
     return emailRegex.hasMatch(email);
   }
 

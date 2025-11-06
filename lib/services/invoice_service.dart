@@ -74,11 +74,11 @@ class InvoiceService {
         .fold(0.0, (sum, invoice) => sum + invoice.totalAmount);
   }
 
-  /// Get invoices within a date range
+  /// Get invoices within a date range (inclusive)
   List<Invoice> getInvoicesByDateRange(DateTime start, DateTime end) {
     return _invoices.values
         .where((invoice) =>
-            invoice.issueDate.isAfter(start) && invoice.issueDate.isBefore(end))
+            !invoice.issueDate.isBefore(start) && !invoice.issueDate.isAfter(end))
         .toList();
   }
 
