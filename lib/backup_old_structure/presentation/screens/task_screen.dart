@@ -112,42 +112,9 @@ class _TaskScreenState extends State<TaskScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: const Text('Low'),
-                      value: 'Low',
-                      groupValue: _priority,
-                      onChanged: (value) {
-                        setState(() {
-                          _priority = value!;
-                        });
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: const Text('Medium'),
-                      value: 'Medium',
-                      groupValue: _priority,
-                      onChanged: (value) {
-                        setState(() {
-                          _priority = value!;
-                        });
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: const Text('High'),
-                      value: 'High',
-                      groupValue: _priority,
-                      onChanged: (value) {
-                        setState(() {
-                          _priority = value!;
-                        });
-                      },
-                    ),
-                  ),
+                  Expanded(child: _PriorityOption(label: 'Low', value: 'Low', selected: _priority, onChanged: _setPriority)),
+                  Expanded(child: _PriorityOption(label: 'Medium', value: 'Medium', selected: _priority, onChanged: _setPriority)),
+                  Expanded(child: _PriorityOption(label: 'High', value: 'High', selected: _priority, onChanged: _setPriority)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -238,4 +205,42 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
     );
   }
+
+  void _setPriority(String value) {
+    setState(() => _priority = value);
+  }
 }
+
+class _PriorityOption extends StatelessWidget {
+  final String label;
+  final String value;
+  final String selected;
+  final ValueChanged<String> onChanged;
+  const _PriorityOption({required this.label, required this.value, required this.selected, required this.onChanged});
+  @override
+  Widget build(BuildContext context) {
+    final bool isSelected = value == selected;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () => onChanged(value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey),
+            const SizedBox(width: 6),
+            Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
