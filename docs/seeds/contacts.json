@@ -1,0 +1,13 @@
+[
+  {
+    "id": "msg-0001",
+    "nomExpediteur": "Société Alpha",
+    "emailExpediteur": "contact@societe-alpha.com",
+    "sujet": "Demande de devis – Téléphonie IP",
+    "message": "Bonjour, merci de nous contacter pour un audit VoIP.",
+    "estTraite": false,
+    "dateReception": "2025-10-02T09:30:00.000Z"
+  }
+]
+
+

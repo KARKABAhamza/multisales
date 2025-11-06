@@ -1,210 +1,49 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
 import '../services/analytics_service.dart';
-import '../../presentation/screens/login_screen.dart';
-import '../../presentation/screens/auth_screen.dart';
-import '../../presentation/screens/enhanced_auth_screen.dart';
-import '../../presentation/screens/home_screen.dart';
-import '../../presentation/screens/enhanced_dashboard_screen.dart';
-import '../../presentation/screens/enhanced_profile_screen.dart';
-import '../../presentation/screens/security_settings_screen.dart';
-import '../../presentation/screens/task_screen.dart';
-import '../../presentation/screens/meeting_screen.dart';
-import '../../presentation/widgets/auth_wrapper.dart';
+import '../../pages/home_page.dart';
+import '../../pages/about_page.dart';
+import '../../pages/services_page.dart';
+import '../../pages/contact_page.dart';
+import '../../pages/expertise_page.dart';
 
 class AppRouter {
-  // Helper method to check authentication state
-  static String? _handleAuthRedirect(
-      BuildContext context, GoRouterState state) {
-    // Get the current route path
-    final String location = state.uri.path;
-
-    // Public routes that don't require authentication
-    const publicRoutes = ['/login', '/auth'];
-
-    // If it's a public route, allow access
-    if (publicRoutes.contains(location)) {
-      return null;
-    }
-
-    try {
-      // Try to get the auth provider
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-      // If user is not authenticated, redirect to login
-      if (!authProvider.isAuthenticated) {
-        return '/login';
-      }
-
-      // If user is authenticated but hasn't completed onboarding, redirect to onboarding
-      if (!authProvider.hasCompletedOnboarding) {
-        // Don't redirect if already on onboarding route
-        if (!location.startsWith('/onboarding')) {
-          return '/onboarding';
-        }
-      }
-
-      // If user is authenticated and onboarding is complete, but on login page, redirect to home
-      if (location == '/login' && authProvider.isAuthenticated) {
-        return '/home';
-      }
-    } catch (e) {
-      // If there's an error accessing auth provider (e.g., not initialized yet)
-      // Allow access to root route which will handle auth wrapper
-      if (location != '/') {
-        return '/';
-      }
-    }
-
-    // Allow access to the requested route
-    return null;
-  }
-
   static final GoRouter router = GoRouter(
     initialLocation: '/',
     observers: [
-      AnalyticsService().observer,
+      AnalyticsService().observer as NavigatorObserver,
     ],
     routes: [
-      // Root route - Auth wrapper that decides between login and home
       GoRoute(
         path: '/',
-        name: 'root',
-        builder: (context, state) => const AuthWrapper(),
-      ),
-
-      // Login route
-      GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-
-      // Enhanced Authentication route (sign-in and sign-up)
-      GoRoute(
-        path: '/auth',
-        name: 'auth',
-        builder: (context, state) => const AuthScreen(),
-      ),
-
-      // Enhanced Authentication route (modern UI)
-      GoRoute(
-        path: '/enhanced-auth',
-        name: 'enhanced-auth',
-        builder: (context, state) => const EnhancedAuthScreen(),
-      ),
-
-      // Home route (protected)
-      GoRoute(
-        path: '/home',
         name: 'home',
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomePage(),
       ),
-
-      // Enhanced Dashboard route (protected)
       GoRoute(
-        path: '/dashboard',
-        name: 'dashboard',
-        builder: (context, state) => const EnhancedDashboardScreen(),
+        path: '/a-propos',
+        name: 'about',
+        builder: (context, state) => const AboutPage(),
       ),
-
-      // Onboarding routes
       GoRoute(
-        path: '/onboarding',
-        name: 'onboarding',
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          final role = extra?['role'] as String?;
-          return OnboardingScreen(role: role);
-        },
-        routes: [
-          GoRoute(
-            path: 'step/:stepId',
-            name: 'onboarding-step',
-            builder: (context, state) {
-              final stepId = state.pathParameters['stepId']!;
-              return OnboardingStepScreen(stepId: stepId);
-            },
-          ),
-        ],
+        path: '/services',
+        name: 'services',
+        builder: (context, state) => ServicesPage(),
       ),
-
-      // Training routes (protected)
       GoRoute(
-        path: '/training',
-        name: 'training',
-        builder: (context, state) => const TrainingScreen(),
-        routes: [
-          GoRoute(
-            path: 'module/:moduleId',
-            name: 'training-module',
-            builder: (context, state) {
-              final moduleId = state.pathParameters['moduleId']!;
-              return TrainingModuleScreen(moduleId: moduleId);
-            },
-          ),
-        ],
+        path: '/contact',
+        name: 'contact',
+        builder: (context, state) => const ContactPage(),
       ),
-
-      // Profile routes (protected)
       GoRoute(
-        path: '/profile',
-        name: 'profile',
-        builder: (context, state) => const EnhancedProfileScreen(),
-        routes: [
-          GoRoute(
-            path: 'settings',
-            name: 'settings',
-            builder: (context, state) => const SettingsScreen(),
-          ),
-          GoRoute(
-            path: 'security',
-            name: 'security-settings',
-            builder: (context, state) => const SecuritySettingsScreen(),
-          ),
-          GoRoute(
-            path: 'edit',
-            name: 'edit-profile',
-            builder: (context, state) => const EditProfileScreen(),
-          ),
-        ],
-      ),
-
-      // Notifications route (protected)
-      GoRoute(
-        path: '/notifications',
-        name: 'notifications',
-        builder: (context, state) => const NotificationsScreen(),
-      ),
-
-      // Task route (protected)
-      GoRoute(
-        path: '/task',
-        name: 'task',
-        builder: (context, state) => const TaskScreen(),
-      ),
-
-      // Meeting route (protected)
-      GoRoute(
-        path: '/meeting',
-        name: 'meeting',
-        builder: (context, state) => const MeetingScreen(),
+        path: '/expertise',
+        name: 'expertise',
+        builder: (context, state) => ExpertisePage(),
       ),
     ],
-
-    // Error handling
     errorBuilder: (context, state) => ErrorScreen(error: state.error),
-
-    // Redirect logic with authentication checks
-    redirect: (context, state) {
-      return _handleAuthRedirect(context, state);
-    },
   );
 }
+// ...existing code...
 
 class OnboardingScreen extends StatelessWidget {
   final String? role;

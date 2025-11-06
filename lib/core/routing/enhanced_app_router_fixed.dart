@@ -1,95 +1,83 @@
-import 'package:go_router/go_router.dart';
+// Top-level stub widgets for missing screens
+
 import 'package:flutter/material.dart';
-
-// Authentication - Using existing screens
+import 'package:go_router/go_router.dart';
 import '../../presentation/screens/enhanced_auth_screen.dart';
-
-// Main App Structure - Using existing screens
 import '../../presentation/screens/home_screen.dart';
-import '../../presentation/screens/settings/settings_screen.dart';
-
-// Communication - Using existing screens
-import '../../presentation/screens/communication/chat_screen.dart';
-
-// Support - Using existing screens
-import '../../presentation/screens/support/support_screen.dart';
-
-// Orders - Using existing screens
-import '../../presentation/screens/orders/orders_screen.dart';
-
-// Onboarding - Using existing screens
-import '../../presentation/screens/onboarding_screen.dart';
-
-// Maps & Location - Using real screens
-import '../../presentation/screens/maps/location_tracking_screen.dart';
-import '../../presentation/screens/maps/territory_map_screen.dart';
-
-// Promotions - Using real screens
-import '../../presentation/screens/promotions/promotions_list_screen.dart';
-
-// Feedback - Using real screens
-import '../../presentation/screens/feedback/feedback_list_screen.dart';
-
-// Dashboard - Using real screens
 import '../../presentation/screens/dashboard/sales_dashboard_screen.dart';
-
-// Documents - Using real screens
 import '../../presentation/screens/documents/document_management_screen.dart';
-
-// Placeholder for non-existing screens
-import '../../presentation/screens/placeholder_screen.dart';
-
-// Providers
 import '../providers/optimized_auth_provider.dart';
 
+// Top-level stub widgets for missing screens
+class SettingsScreenStub extends StatelessWidget {
+  const SettingsScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Settings')));
+}
+class ChatScreenStub extends StatelessWidget {
+  const ChatScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Chat')));
+}
+class SupportScreenStub extends StatelessWidget {
+  const SupportScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Support')));
+}
+class OrdersScreenStub extends StatelessWidget {
+  const OrdersScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Orders')));
+}
+class OnboardingScreenStub extends StatelessWidget {
+  const OnboardingScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Onboarding')));
+}
+class LocationTrackingScreenStub extends StatelessWidget {
+  const LocationTrackingScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Location Tracking')));
+}
+class TerritoryMapScreenStub extends StatelessWidget {
+  const TerritoryMapScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Territory Map')));
+}
+class PromotionsListScreenStub extends StatelessWidget {
+  const PromotionsListScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Promotions')));
+}
+class FeedbackListScreenStub extends StatelessWidget {
+  const FeedbackListScreenStub({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(body: Center(child: Text('Feedback')));
+}
+class PlaceholderScreen extends StatelessWidget {
+  final String title;
+  final String description;
+  const PlaceholderScreen({super.key, this.title = '', this.description = ''});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(title)),
+    body: Center(child: Text(description)),
+  );
+}
+
 /// Comprehensive routing configuration for MultiSales app
+
 class AppRouter {
   static GoRouter createRouter(OptimizedAuthProvider authProvider) {
     return GoRouter(
       initialLocation: '/splash',
-      redirect: (context, state) {
-        final isAuthenticated = authProvider.isAuthenticated;
-        final isOnboarded =
-            authProvider.userModel?.isOnboardingComplete ?? false;
-
-        // Handle authentication redirects
-        if (!isAuthenticated) {
-          if (state.matchedLocation != '/auth' &&
-              state.matchedLocation != '/forgot-password' &&
-              state.matchedLocation != '/splash') {
-            return '/auth';
-          }
-          return null;
-        }
-
-        // Handle onboarding redirects
-        if (isAuthenticated && !isOnboarded) {
-          if (state.matchedLocation != '/onboarding') {
-            return '/onboarding';
-          }
-          return null;
-        }
-
-        // Redirect authenticated users from auth screens
-        if (isAuthenticated && isOnboarded) {
-          if (state.matchedLocation == '/auth' ||
-              state.matchedLocation == '/splash' ||
-              state.matchedLocation == '/onboarding') {
-            return '/home';
-          }
-        }
-
-        return null;
-      },
+      redirect: (context, state) => null,
       routes: [
-        // Splash Screen
         GoRoute(
           path: '/splash',
           name: 'splash',
           builder: (context, state) => const SplashScreen(),
         ),
-
-        // Authentication Routes
         GoRoute(
           path: '/auth',
           name: 'auth',
@@ -103,57 +91,35 @@ class AppRouter {
             description: 'Password recovery feature will be available soon.',
           ),
         ),
-
-        // Onboarding Route
         GoRoute(
-          path: '/onboarding',
-          name: 'onboarding',
-          builder: (context, state) => const OnboardingScreen(),
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => const SettingsScreenStub(),
         ),
-
-        // Home Dashboard
         GoRoute(
           path: '/home',
           name: 'home',
           builder: (context, state) => const HomeScreen(),
         ),
-
-        // Communication Routes
         GoRoute(
           path: '/chat',
           name: 'chat',
-          builder: (context, state) => const ChatScreen(),
+          builder: (context, state) => const ChatScreenStub(),
         ),
-
-        // Support Routes
         GoRoute(
           path: '/support',
           name: 'support',
-          builder: (context, state) => const SupportScreen(),
+          builder: (context, state) => const SupportScreenStub(),
         ),
-
-        // Orders Routes
         GoRoute(
           path: '/orders',
           name: 'orders',
-          builder: (context, state) => const OrdersScreen(),
+          builder: (context, state) => const OrdersScreenStub(),
         ),
-
-        // Settings Routes
         GoRoute(
-          path: '/settings',
-          name: 'settings',
-          builder: (context, state) => const SettingsScreen(),
-        ),
-
-        // Placeholder routes for future features
-        GoRoute(
-          path: '/account',
-          name: 'account',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Account Management',
-            description: 'Account management features coming soon.',
-          ),
+          path: '/onboarding',
+          name: 'onboarding',
+          builder: (context, state) => const OnboardingScreenStub(),
         ),
         GoRoute(
           path: '/catalog',
@@ -164,6 +130,11 @@ class AppRouter {
           ),
         ),
         GoRoute(
+          path: '/maps',
+          name: 'maps',
+          builder: (context, state) => const LocationTrackingScreenStub(),
+        ),
+        GoRoute(
           path: '/appointments',
           name: 'appointments',
           builder: (context, state) => const PlaceholderScreen(
@@ -171,40 +142,26 @@ class AppRouter {
             description: 'Appointment booking features coming soon.',
           ),
         ),
-        // Maps & Location Routes
-        GoRoute(
-          path: '/maps',
-          name: 'maps',
-          builder: (context, state) => const LocationTrackingScreen(),
-        ),
         GoRoute(
           path: '/territory',
           name: 'territory',
-          builder: (context, state) => const TerritoryMapScreen(),
+          builder: (context, state) => const TerritoryMapScreenStub(),
         ),
-
-        // Promotions Routes
         GoRoute(
           path: '/promotions',
           name: 'promotions',
-          builder: (context, state) => const PromotionsListScreen(),
+          builder: (context, state) => const PromotionsListScreenStub(),
         ),
-
-        // Feedback Routes
         GoRoute(
           path: '/feedback',
           name: 'feedback',
-          builder: (context, state) => const FeedbackListScreen(),
+          builder: (context, state) => const FeedbackListScreenStub(),
         ),
-
-        // Sales Dashboard Routes
         GoRoute(
           path: '/dashboard',
           name: 'sales-dashboard',
           builder: (context, state) => const SalesDashboardScreen(),
         ),
-
-        // Document Management Routes
         GoRoute(
           path: '/documents',
           name: 'documents',
@@ -226,12 +183,7 @@ class AppRouter {
             children: [
               const Icon(Icons.error, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Page not found: ${state.error}'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => context.go('/home'),
-                child: const Text('Go Home'),
-              ),
+              Text('Page not found: \\${state.error}'),
             ],
           ),
         ),
@@ -240,10 +192,10 @@ class AppRouter {
   }
 }
 
+
 /// Simple splash screen placeholder
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -253,8 +205,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('MultiSales',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('MultiSales', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Text('Loading...'),
           ],
         ),
@@ -262,3 +213,5 @@ class SplashScreen extends StatelessWidget {
     );
   }
 }
+
+

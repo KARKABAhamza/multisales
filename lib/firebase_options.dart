@@ -48,7 +48,7 @@ class DefaultFirebaseOptions {
     projectId: 'multisales-18e57',
     authDomain: 'multisales-18e57.firebaseapp.com',
     databaseURL: 'https://multisales-18e57-default-rtdb.firebaseio.com',
-    storageBucket: 'multisales-18e57.firebasestorage.app',
+  storageBucket: 'multisales-18e57.appspot.com',
     measurementId: 'G-3DB4WDLJ7X',
   );
 
@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '967872205422',
     projectId: 'multisales-18e57',
     databaseURL: 'https://multisales-18e57-default-rtdb.firebaseio.com',
-    storageBucket: 'multisales-18e57.firebasestorage.app',
+  storageBucket: 'multisales-18e57.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -68,7 +68,7 @@ class DefaultFirebaseOptions {
     projectId: 'multisales-18e57',
     authDomain: 'multisales-18e57.firebaseapp.com',
     databaseURL: 'https://multisales-18e57-default-rtdb.firebaseio.com',
-    storageBucket: 'multisales-18e57.firebasestorage.app',
+  storageBucket: 'multisales-18e57.appspot.com',
     iosBundleId: 'com.example.multisalesApp',
   );
 
@@ -79,7 +79,7 @@ class DefaultFirebaseOptions {
     projectId: 'multisales-18e57',
     authDomain: 'multisales-18e57.firebaseapp.com',
     databaseURL: 'https://multisales-18e57-default-rtdb.firebaseio.com',
-    storageBucket: 'multisales-18e57.firebasestorage.app',
+  storageBucket: 'multisales-18e57.appspot.com',
     iosBundleId: 'com.example.multisalesApp',
   );
 

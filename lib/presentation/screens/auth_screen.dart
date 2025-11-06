@@ -1,13 +1,11 @@
-import '../widgets/social_login_buttons.dart';
-import '../../core/localization/app_localizations.dart';
+// Removed broken import for SocialLoginButtons (file does not exist)
+import '../../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:provider/provider.dart';
-import '../../core/providers/oauth_provider.dart';
 import 'package:go_router/go_router.dart';
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import '../widgets/enhanced_form_fields.dart';
+// Removed broken import for Enhanced Form Fields (file does not exist)
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -198,24 +196,26 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           Row(
             children: [
               Expanded(
-                child: EnhancedTextFormField(
+                child: TextFormField(
                   controller: _firstNameController,
-                  labelText: l?.firstName ?? 'First Name',
-                  hintText: l?.firstNameHint ?? 'John',
-                  semanticLabel: l?.firstNameInput ?? 'First name input field',
-                  prefixIcon: const Icon(Icons.person_outlined),
+                  decoration: InputDecoration(
+                    labelText: l?.firstName ?? 'First Name',
+                    hintText: l?.firstNameHint ?? 'John',
+                    prefixIcon: const Icon(Icons.person_outlined),
+                  ),
                   textInputAction: TextInputAction.next,
                   validator: _validateName,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: EnhancedTextFormField(
+                child: TextFormField(
                   controller: _lastNameController,
-                  labelText: l?.lastName ?? 'Last Name',
-                  hintText: l?.lastNameHint ?? 'Doe',
-                  semanticLabel: l?.lastNameInput ?? 'Last name input field',
-                  prefixIcon: const Icon(Icons.person_outlined),
+                  decoration: InputDecoration(
+                    labelText: l?.lastName ?? 'Last Name',
+                    hintText: l?.lastNameHint ?? 'Doe',
+                    prefixIcon: const Icon(Icons.person_outlined),
+                  ),
                   textInputAction: TextInputAction.next,
                   validator: _validateName,
                 ),
@@ -223,91 +223,73 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             ],
           ),
           const SizedBox(height: 16),
-          EnhancedTextFormField(
+          TextFormField(
             controller: _signUpEmailController,
-            labelText: l?.email ?? 'Email Address',
-            hintText: l?.emailHint ?? 'john.doe@example.com',
-            semanticLabel:
-                l?.emailSignUpInput ?? 'Email address input field for sign up',
-            prefixIcon: const Icon(Icons.email_outlined),
+            decoration: InputDecoration(
+              labelText: l?.email ?? 'Email Address',
+              hintText: l?.emailHint ?? 'john.doe@example.com',
+              prefixIcon: const Icon(Icons.email_outlined),
+            ),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             validator: _validateEmail,
           ),
           const SizedBox(height: 16),
-          EnhancedTextFormField(
+          TextFormField(
             controller: _phoneController,
-            labelText: l?.phone ?? 'Phone Number',
-            hintText: l?.phoneHint ?? '+1 234 567 8900',
-            semanticLabel: l?.phoneInput ?? 'Phone number input field',
-            prefixIcon: const Icon(Icons.phone_outlined),
+            decoration: InputDecoration(
+              labelText: l?.phone ?? 'Phone Number',
+              hintText: l?.phoneHint ?? '+1 234 567 8900',
+              prefixIcon: const Icon(Icons.phone_outlined),
+            ),
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
             validator: _validatePhone,
           ),
           const SizedBox(height: 16),
-          EnhancedPasswordField(
+          TextFormField(
             controller: _signUpPasswordController,
-            labelText: l?.password ?? 'Password',
-            hintText: l?.createPasswordHint ?? 'Create a strong password',
-            semanticLabel: l?.createPasswordInput ?? 'Create password field',
+            decoration: InputDecoration(
+              labelText: l?.password ?? 'Password',
+              hintText: l?.createPasswordHint ?? 'Create a strong password',
+              prefixIcon: const Icon(Icons.lock_outline),
+            ),
+            obscureText: true,
             textInputAction: TextInputAction.next,
             validator: _validatePassword,
           ),
           const SizedBox(height: 16),
-          EnhancedPasswordField(
+          TextFormField(
             controller: _confirmPasswordController,
-            labelText: l?.confirmPassword ?? 'Confirm Password',
-            hintText: l?.confirmPasswordHint ?? 'Re-enter your password',
-            semanticLabel: l?.confirmPasswordInput ?? 'Confirm password field',
+            decoration: InputDecoration(
+              labelText: l?.confirmPassword ?? 'Confirm Password',
+              hintText: l?.confirmPasswordHint ?? 'Re-enter your password',
+              prefixIcon: const Icon(Icons.lock_outline),
+            ),
+            obscureText: true,
             textInputAction: TextInputAction.done,
             validator: _validateConfirmPassword,
           ),
           const SizedBox(height: 24),
-          SocialLoginButtons(
-            isLoading: _isLoading,
-            onGoogle: _isLoading
-                ? null
-                : () async {
-                    final oauthProvider =
-                        Provider.of<OAuthProvider>(context, listen: false);
-                    await oauthProvider.signIn();
-                    if (oauthProvider.errorMessage != null && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(oauthProvider.errorMessage!)),
-                      );
-                    }
-                  },
-            onFacebook: () {
-              final l = AppLocalizations.of(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(l?.facebookSignUpNotImplemented ??
-                        'Facebook (OAuth2) sign-up is not yet implemented.')),
-              );
-            },
-            onApple: () {
-              final l = AppLocalizations.of(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(l?.appleSignUpNotImplemented ??
-                        'Apple (OAuth2) sign-up is not yet implemented.')),
-              );
-            },
-          ),
+          // Social login buttons removed (widget does not exist)
           const SizedBox(height: 24),
-          EnhancedButton(
-            onPressed: _signUp,
-            isLoading: _isLoading,
+          SizedBox(
             width: double.infinity,
-            semanticLabel: l?.createAccountButton ?? 'Create account button',
-            tooltip: l?.createAccountTooltip ?? 'Create your new account',
-            child: Text(
-              l?.createAccount ?? 'Create Account',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            child: ElevatedButton(
+              onPressed: _isLoading ? null : _signUp,
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(
+                      l?.createAccount ?? 'Create Account',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 16),
@@ -359,7 +341,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     if (value == null || value.isEmpty) {
       return l?.pleaseEnterEmail ?? 'Please enter your email';
     }
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4} $').hasMatch(value)) {
+    // Basic RFC-like email check
+    if (!RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
       return l?.pleaseEnterValidEmail ?? 'Please enter a valid email address';
     }
     return null;
@@ -403,8 +386,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     if (value == null || value.isEmpty) {
       return l?.pleaseEnterPhone ?? 'Please enter your phone number';
     }
-    if (!RegExp(r'^\+?[1-9]\d{1,14} $')
-        .hasMatch(value.replaceAll(RegExp(r'[\s\-\(\)]'), ''))) {
+    // E.164-like phone format, after stripping spaces and punctuation
+    final normalized = value.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+    if (!RegExp(r'^\+?[1-9]\d{1,14}$').hasMatch(normalized)) {
       return l?.pleaseEnterValidPhone ?? 'Please enter a valid phone number';
     }
     return null;
@@ -426,13 +410,13 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Email Field
-                EnhancedTextFormField(
+                TextFormField(
                   controller: _signInEmailController,
-                  labelText: l?.email ?? 'Email',
-                  hintText: l?.emailHint ?? 'Email',
-                  semanticLabel: l?.email ?? 'Email',
-                  semanticHint: l?.emailHint ?? 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined),
+                  decoration: InputDecoration(
+                    labelText: l?.email ?? 'Email',
+                    hintText: l?.emailHint ?? 'Email',
+                    prefixIcon: const Icon(Icons.email_outlined),
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: _validateEmail,
@@ -440,12 +424,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 16),
                 // Password Field
-                EnhancedPasswordField(
+                TextFormField(
                   controller: _signInPasswordController,
-                  labelText: l?.password ?? 'Password',
-                  hintText: l?.passwordHint ?? 'Password',
-                  semanticLabel: l?.password ?? 'Password',
-                  semanticHint: l?.passwordHint ?? 'Password',
+                  decoration: InputDecoration(
+                    labelText: l?.password ?? 'Password',
+                    hintText: l?.passwordHint ?? 'Password',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
                   textInputAction: TextInputAction.done,
                   validator: _validatePassword,
                 ),
@@ -463,18 +449,23 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 24),
                 // Sign In Button
-                EnhancedButton(
-                  onPressed: _signIn,
-                  isLoading: _isLoading,
+                SizedBox(
                   width: double.infinity,
-                  semanticLabel: l?.signIn ?? 'Sign In',
-                  tooltip: l?.signIn ?? 'Sign In',
-                  child: Text(
-                    l?.signIn ?? 'Sign In',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _signIn,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            l?.signIn ?? 'Sign In',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),

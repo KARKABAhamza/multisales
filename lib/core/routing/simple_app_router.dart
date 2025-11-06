@@ -1,16 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
-// Core Authentication
-import '../../presentation/screens/login_screen.dart';
+// Core Authentication (use AuthScreen if needed later)
 
 // Existing Screens
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/home_screen.dart';
-import '../../presentation/screens/settings/settings_screen.dart';
+import '../../core/providers/optimized_auth_provider.dart';
+import '../../pages/contact_page.dart';
+
 
 // Providers
-import '../providers/optimized_auth_provider.dart';
 
 /// Simplified routing configuration for MultiSales app
 /// This version includes only existing screens and working routes
@@ -49,9 +49,9 @@ class SimpleAppRouter {
 
         // Authentication Routes
         GoRoute(
-          path: '/auth',
-          name: 'auth',
-          builder: (context, state) => const LoginScreen(),
+          path: '/contact',
+          name: 'contact',
+          builder: (context, state) => const ContactPage(),
         ),
 
         // Home Route - Placeholder for now
@@ -61,12 +61,7 @@ class SimpleAppRouter {
           builder: (context, state) => const HomeScreen(),
         ),
 
-        // Settings Route - Placeholder for now
-        GoRoute(
-          path: '/settings',
-          name: 'settings',
-          builder: (context, state) => const SettingsScreen(),
-        ),
+
       ],
       errorBuilder: (context, state) => Scaffold(
         body: Center(
@@ -88,3 +83,4 @@ class SimpleAppRouter {
     );
   }
 }
+

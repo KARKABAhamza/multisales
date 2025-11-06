@@ -1,0 +1,84 @@
+name: Code Quality and Security
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  codacy-analysis:
+    name: Codacy Analysis (SARIF)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@v4
+        with:
+          # Optional: set in repo secrets if you want results uploaded to Codacy
+          # Otherwise we produce SARIF and upload to GitHub code scanning
+          # project-token is optional; comment it out to avoid invalid secrets access when not set
+          # To enable upload to Codacy, create a repository secret named CODACY_PROJECT_TOKEN
+          # and uncomment the line below:
+          # project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          format: sarif
+          output: codacy-results.sarif
+          upload: false
+
+      - name: Upload SARIF to GitHub Code Scanning (Codacy)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: codacy-results.sarif
+
+  trivy-security:
+    name: Trivy Security Scan (deps & filesystem)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trivy FS scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+
+      - name: Upload SARIF to GitHub Code Scanning (Trivy)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+  flutter-ci:
+    name: Flutter Analyze and Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test --reporter expanded

@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
+import '../../l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // Import all the new responsive components
 import '../../core/utils/responsive_layout.dart';
@@ -9,8 +11,9 @@ import '../widgets/interactive_widgets.dart';
 import '../widgets/display_widgets.dart';
 import '../widgets/custom_widgets.dart';
 import '../../core/services/api_service.dart';
-import '../../core/providers/auth_provider.dart';
 import '../../data/models/product_model.dart';
+import '../widgets/testimonials_section.dart';
+import '../../data/partners_and_testimonials.dart';
 
 /// Main dashboard demonstrating all responsive components with API integration
 class ResponsiveDashboard extends StatefulWidget {
@@ -120,6 +123,10 @@ class _ResponsiveDashboardState extends State<ResponsiveDashboard> {
                           _buildProductsSection(),
                           const SizedBox(height: 32),
                           _buildRecentActivitySection(),
+                          const SizedBox(height: 32),
+                          const TestimonialsSection(items: testimonialsData),
+                          const SizedBox(height: 24),
+                          const TrustedBySection(partners: partnerLogos),
                         ],
                       ),
                     ),
@@ -138,50 +145,45 @@ class _ResponsiveDashboardState extends State<ResponsiveDashboard> {
   }
 
   Widget _buildWelcomeSection() {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        final user = authProvider.firebaseUser;
-        return AnimatedGradientBackground(
-          colors: [
-            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-            Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-          ],
-          child: ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  'Welcome back, ${user?.displayName ?? 'User'}!',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  mobileFontSize: 24,
-                  tabletFontSize: 28,
-                  desktopFontSize: 32,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Here\'s what\'s happening with your business today.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
-                      ),
-                ),
-                const SizedBox(height: 16),
-                ResponsiveNotificationBanner(
-                  message: 'You have 3 new orders and 2 pending reviews!',
-                  type: NotificationType.info,
-                  showAction: true,
-                  actionLabel: 'View Details',
-                  onAction: () => _handleNavigation('/orders'),
-                ),
-              ],
+    return AnimatedGradientBackground(
+      colors: [
+        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+      ],
+      child: ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              AppLocalizations.of(context)?.welcomeToMultiSales ?? 'Welcome to MultiSales!',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+              mobileFontSize: 24,
+              tabletFontSize: 28,
+              desktopFontSize: 32,
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 8),
+    Text(
+      AppLocalizations.of(context)?.welcomeMessage ?? "Here's what's happening with your business today.",
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+        color: Theme.of(context)
+        .colorScheme
+        .onSurface
+        .withOpacity(0.7),
+      ),
+    ),
+            const SizedBox(height: 16),
+            ResponsiveNotificationBanner(
+              message: AppLocalizations.of(context)?.supportDesc ?? 'You have new updates!',
+              type: NotificationType.info,
+              showAction: false,
+              actionLabel: '',
+              onAction: null,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -729,67 +731,67 @@ class _ResponsiveFormDemoState extends State<ResponsiveFormDemo> {
             children: [
               const SizedBox(height: 24),
               ResponsiveFormBuilder(
-                isLoading: _isLoading,
-                submitButtonText: 'Submit Form',
-                onSubmit: _handleSubmit,
-                fields: [
-                  FormFieldConfig(
-                    key: 'name',
-                    label: 'Full Name',
-                    hintText: 'Enter your full name',
-                    type: FormFieldType.text,
-                    prefixIcon: const Icon(Icons.person),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                  ),
-                  FormFieldConfig(
-                    key: 'email',
-                    label: 'Email Address',
-                    hintText: 'Enter your email',
-                    type: FormFieldType.email,
-                  ),
-                  FormFieldConfig(
-                    key: 'phone',
-                    label: 'Phone Number',
-                    hintText: 'Enter your phone number',
-                    type: FormFieldType.text,
-                    prefixIcon: const Icon(Icons.phone),
-                  ),
-                  FormFieldConfig(
-                    key: 'country',
-                    label: 'Country',
-                    hintText: 'Select your country',
-                    type: FormFieldType.dropdown,
-                    options: [
-                      DropdownOption(label: 'United States', value: 'us'),
-                      DropdownOption(label: 'Canada', value: 'ca'),
-                      DropdownOption(label: 'United Kingdom', value: 'uk'),
-                      DropdownOption(label: 'Australia', value: 'au'),
-                      DropdownOption(label: 'Germany', value: 'de'),
-                    ],
-                  ),
-                  FormFieldConfig(
-                    key: 'birthdate',
-                    label: 'Birth Date',
-                    hintText: 'Select your birth date',
-                    type: FormFieldType.date,
-                  ),
-                  FormFieldConfig(
-                    key: 'bio',
-                    label: 'Biography',
-                    hintText: 'Tell us about yourself',
-                    type: FormFieldType.multiline,
-                  ),
-                  FormFieldConfig(
-                    key: 'newsletter',
-                    hintText: 'Subscribe to newsletter',
-                    type: FormFieldType.checkbox,
-                  ),
-                ],
+                  isLoading: _isLoading,
+                  submitButtonText: 'Submit Form',
+                  onSubmit: _handleSubmit,
+                  fields: [
+                    FormFieldConfig(
+                      fieldKey: 'name',
+                      label: 'Full Name',
+                      hintText: 'Enter your full name',
+                      type: FormFieldType.text,
+                      prefixIcon: const Icon(Icons.person),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'email',
+                      label: 'Email Address',
+                      hintText: 'Enter your email',
+                      type: FormFieldType.email,
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'phone',
+                      label: 'Phone Number',
+                      hintText: 'Enter your phone number',
+                      type: FormFieldType.text,
+                      prefixIcon: const Icon(Icons.phone),
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'country',
+                      label: 'Country',
+                      hintText: 'Select your country',
+                      type: FormFieldType.dropdown,
+                      options: [
+                        DropdownOption(label: 'United States', value: 'us'),
+                        DropdownOption(label: 'Canada', value: 'ca'),
+                        DropdownOption(label: 'United Kingdom', value: 'uk'),
+                        DropdownOption(label: 'Australia', value: 'au'),
+                        DropdownOption(label: 'Germany', value: 'de'),
+                      ],
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'birthdate',
+                      label: 'Birth Date',
+                      hintText: 'Select your birth date',
+                      type: FormFieldType.date,
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'bio',
+                      label: 'Biography',
+                      hintText: 'Tell us about yourself',
+                      type: FormFieldType.multiline,
+                    ),
+                    FormFieldConfig(
+                      fieldKey: 'newsletter',
+                      hintText: 'Subscribe to newsletter',
+                      type: FormFieldType.checkbox,
+                    ),
+                  ],
               ),
             ],
           ),

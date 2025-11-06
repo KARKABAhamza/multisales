@@ -3,7 +3,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent, setUserProperties } from "firebase/analytics";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getPerformance, trace } from "firebase/performance";
@@ -16,7 +16,7 @@ const firebaseConfig = {
   authDomain: "multisales-18e57.firebaseapp.com",
   databaseURL: "https://multisales-18e57-default-rtdb.firebaseio.com",
   projectId: "multisales-18e57",
-  storageBucket: "multisales-18e57.firebasestorage.app",
+  storageBucket: "multisales-18e57.appspot.com",
   messagingSenderId: "967872205422",
   appId: "1:967872205422:web:b16f6c6b6d6cedc5464c7f",
   measurementId: "G-3DB4WDLJ7X"

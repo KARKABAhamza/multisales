@@ -42,4 +42,43 @@
   "forgotPassword": "Forgot password?",
   "termsOfService": "Terms of Service",
   "privacyPolicy": "Privacy Policy"
+  ,
+  "brandName": "MultiSales",
+  "menuHome": "Accueil",
+  "menuExpertise": "Nos Métiers",
+  "menuServices": "Services",
+  "menuAbout": "À propos",
+  "menuContact": "Contact",
+  "menuLogin": "Connexion",
+
+  "heroTitle": "INTÉGRATEUR DE SOLUTIONS",
+  "heroSubtitle": "RÉSEAUX & TÉLÉCOMS, AUTOMATISME ET SERVICE INDUSTRIEL",
+  "ctaQuote": "Demander un devis",
+  "ctaOurExpertise": "Découvrir nos métiers",
+
+  "sectionOurExpertiseTitle": "Nos Métiers",
+  "expertiseVoice": "VOIX",
+  "expertiseAutomatism": "AUTOMATISME",
+  "expertiseData": "DATA",
+  "expertiseVideo": "VIDÉO",
+
+  "sectionWhyChooseUsTitle": "Pourquoi nous choisir ?",
+  "whyPoint1": "Sécurité et fiabilité de bout en bout",
+  "whyPoint2": "Réactivité et SLA adaptés",
+  "whyPoint3": "Solutions personnalisées",
+  "whyPoint4": "Support client dédié",
+
+  "sectionFeaturedServicesTitle": "Nos services phares",
+  "featuredService1": "Réseaux & Télécoms",
+  "featuredService2": "Automatisme industriel",
+  "featuredService3": "Data & Analytics",
+  "featuredService4": "Vidéo-surveillance",
+
+  "finalCtaTitle": "Prêt à accélérer votre infrastructure ?",
+  "finalCtaSubtitle": "Parlons de vos besoins et construisons une solution évolutive.",
+  "finalCtaContact": "Nous contacter"
+  ,
+  "heroLine1": "Des solutions performantes et sécurisées, du design à la mise en production.",
+  "heroLine2": "Accompagnement sur‑mesure, SLA adaptés et support réactif.",
+  "heroLine3": "Déployez plus vite. Évoluez sereinement avec MultiSales."
 }

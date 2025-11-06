@@ -1,0 +1,36 @@
+Project,Issue Type,Summary,Description,Priority,Labels,Components,Sprint
+MULTISALES,Epic,Phase 1 – Setup & Architecture,"Setup Flutter project, Firebase config, core architecture, linting, CI.",High,phase1;setup,platform,Phase 1
+MULTISALES,Story,Initialize Flutter Web project,"Create Flutter project, enable web, set HTML renderer in dev.",High,setup;flutter,platform,Phase 1
+MULTISALES,Story,Integrate Firebase (Auth/Firestore/Storage),"Add Firebase to web, add firebase_options.dart, test connection.",High,setup;firebase,backend,Phase 1
+MULTISALES,Story,Configure CI (GitHub Actions) for Web build,"Add workflow to build Flutter web on push/PR.",Medium,ci;build,devops,Phase 1
+MULTISALES,Task,Enable Dart lints and formatter,"analysis_options.yaml and formatting checks.",Medium,quality;linting,quality,Phase 1
+
+MULTISALES,Epic,Phase 2 – Theming, Routing, Auth,"Material 3 themes, go_router routes, login page.",High,phase2;ui;auth,frontend,Phase 2
+MULTISALES,Story,Implement Material 3 theme (light/dark),"Create ThemeData, toggle, persist preference.",High,ui;theme,frontend,Phase 2
+MULTISALES,Story,Add go_router routes per spec,"Public routes, account and admin shells with guards.",High,routing;seo,frontend,Phase 2
+MULTISALES,Story,Build Login page (email/password),"Form validation, integrate Firebase Auth.",High,auth;ui,frontend,Phase 2
+MULTISALES,Task,Auth guards for /admin and /compte,"Role-based redirects, not-found and unauthorized handling.",High,auth;security,frontend,Phase 2
+
+MULTISALES,Epic,Phase 3 – Public Pages & Contact,"Home, About, Expertise, Services list/detail, Contact form.",High,phase3;public,frontend,Phase 3
+MULTISALES,Story,Home page with hero and CTA,"Hero section, services preview, testimonials.",High,ui;home,frontend,Phase 3
+MULTISALES,Story,About page,"Mission, valeurs, certifications, équipe.",Medium,ui;about,frontend,Phase 3
+MULTISALES,Story,Expertise page,"VOIX, AUTOMATISME, DATA, COURANT FORT, VIDEO, DOMOTIQUE.",Medium,ui;expertise,frontend,Phase 3
+MULTISALES,Story,Services page (catalog),"Grid/list of services with cards and filters (MVP).",High,ui;services,frontend,Phase 3
+MULTISALES,Story,Service detail page,"Dynamic route /services/:id, description, image, pricing/tarif.",High,ui;services,frontend,Phase 3
+MULTISALES,Story,Contact page + form submit,"Store MessageContact in Firestore; basic confirmation.",High,contact;forms,frontend,Phase 3
+
+MULTISALES,Epic,Phase 4 – Client Space & Admin,"Client documents/communications/contrats, Admin CRUD services and contacts.",High,phase4;client;admin,fullstack,Phase 4
+MULTISALES,Story,Client – Documents,"List and download documents from Storage.",High,client;documents,frontend,Phase 4
+MULTISALES,Story,Client – Communications,"List messages/notifications, mark read/unread.",High,client;communications,frontend,Phase 4
+MULTISALES,Story,Client – Contrats,"Show subscription status, dates, and linked documents.",High,client;contracts,frontend,Phase 4
+MULTISALES,Story,Admin – CRUD ServiceProduit,"Create/update/delete services with image upload.",High,admin;services,fullstack,Phase 4
+MULTISALES,Story,Admin – Manage contact messages,"List MessageContact, mark processed (estTraite).",High,admin;contacts,fullstack,Phase 4
+MULTISALES,Task,Role-based Firestore/Storage rules,"Enforce admin/client/public access.",High,security;rules,backend,Phase 4
+
+MULTISALES,Epic,Phase 5 – Optimize, SEO, Deploy,"Perf, tests, SEO meta, analytics, hosting/deploy.",High,phase5;seo;deploy,platform,Phase 5
+MULTISALES,Story,Performance pass (images, lazy-load, caching),"Compress images, use HTML renderer when suitable.",Medium,perf;images,frontend,Phase 5
+MULTISALES,Story,Add Analytics and cookie banner,"Track traffic, conversions; cookie consent for RGPD.",Medium,analytics;rgpd,frontend,Phase 5
+MULTISALES,Story,SEO meta in web/index.html,"title, description, og:*, favicon; routing fallback.",Medium,seo;web,frontend,Phase 5
+MULTISALES,Task,Deploy to Firebase Hosting,"Connect domain, SSL, 404 fallback, cache headers.",High,deploy;hosting,devops,Phase 5
+
+

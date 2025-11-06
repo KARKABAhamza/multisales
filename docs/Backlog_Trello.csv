@@ -1,0 +1,31 @@
+List,Title,Description,Labels
+Phase 1 – Setup,Initialize Flutter Web project,"Create Flutter project, enable web, set HTML renderer in dev.",setup;flutter
+Phase 1 – Setup,Integrate Firebase (Auth/Firestore/Storage),"Add Firebase to web, add firebase_options.dart, test connection.",setup;firebase
+Phase 1 – Setup,Configure CI for Web build,"GitHub Actions workflow to build Flutter web on push/PR.",ci;build
+Phase 1 – Setup,Enable Dart lints/formatter,"analysis_options.yaml and formatting checks.",quality;linting
+
+Phase 2 – Theming/Routing/Auth,Material 3 theme (light/dark),"Create ThemeData, toggle, persist preference.",ui;theme
+Phase 2 – Theming/Routing/Auth,go_router routes per spec,"Public routes; account and admin shells with guards.",routing;seo
+Phase 2 – Theming/Routing/Auth,Login page (email/password),"Form validation, integrate Firebase Auth.",auth;ui
+Phase 2 – Theming/Routing/Auth,Auth guards for /admin and /compte,"Role-based redirects; unauthorized handling.",auth;security
+
+Phase 3 – Public Pages,Home page with hero and CTA,"Hero section, services preview, testimonials.",ui;home
+Phase 3 – Public Pages,About page,"Mission, valeurs, certifications, équipe.",ui;about
+Phase 3 – Public Pages,Expertise page,"VOIX, AUTOMATISME, DATA, COURANT FORT, VIDEO, DOMOTIQUE.",ui;expertise
+Phase 3 – Public Pages,Services page (catalog),"Grid/list of services with cards and filters (MVP).",ui;services
+Phase 3 – Public Pages,Service detail page,"Dynamic route /services/:id, description, image, pricing/tarif.",ui;services
+Phase 3 – Public Pages,Contact page + submit,"Store MessageContact in Firestore; confirmation.",contact;forms
+
+Phase 4 – Client/Admin,Client – Documents,"List and download documents from Storage.",client;documents
+Phase 4 – Client/Admin,Client – Communications,"List messages/notifications, mark read/unread.",client;communications
+Phase 4 – Client/Admin,Client – Contrats,"Show subscription status, dates, linked docs.",client;contracts
+Phase 4 – Client/Admin,Admin – CRUD ServiceProduit,"Create/update/delete services with image upload.",admin;services
+Phase 4 – Client/Admin,Admin – Manage contact messages,"List MessageContact, mark processed (estTraite).",admin;contacts
+Phase 4 – Client/Admin,Role-based Firestore/Storage rules,"Enforce admin/client/public access.",security;rules
+
+Phase 5 – Optimize/SEO/Deploy,Performance pass,"Compress images, lazy-load, caching; HTML renderer when suitable.",perf;images
+Phase 5 – Optimize/SEO/Deploy,Analytics + cookie banner,"Track traffic and conversions; RGPD consent.",analytics;rgpd
+Phase 5 – Optimize/SEO/Deploy,SEO meta in web/index.html,"title, description, og:*, favicon; routing fallback.",seo;web
+Phase 5 – Optimize/SEO/Deploy,Deploy to Firebase Hosting,"Custom domain, SSL, 404 fallback, cache headers.",deploy;hosting
+
+

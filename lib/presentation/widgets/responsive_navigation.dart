@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/utils/responsive_layout.dart';
-import '../../core/providers/auth_provider.dart';
+// Legacy navigation stub cleaned up after removing account/admin routes.
 import '../../core/providers/language_provider.dart';
 
 /// Main navigation header with responsive design
@@ -32,11 +31,17 @@ class _ResponsiveNavigationHeaderState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobileHeader(context),
-      tablet: _buildTabletHeader(context),
-      desktop: _buildDesktopHeader(context),
-      largeDesktop: _buildDesktopHeader(context),
+    // Fallback: Use LayoutBuilder for responsive header
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          return _buildMobileHeader(context);
+        } else if (constraints.maxWidth < 1024) {
+          return _buildTabletHeader(context);
+        } else {
+          return _buildDesktopHeader(context);
+        }
+      },
     );
   }
 
@@ -139,13 +144,13 @@ class _ResponsiveNavigationHeaderState
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: ResponsiveContainer(
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: Row(
           children: [
@@ -405,7 +410,7 @@ class _ResponsiveNavigationHeaderState
 
   Widget _buildLanguageSelector(BuildContext context) {
     return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
+      builder: (context, LanguageProvider languageProvider, child) {
         return PopupMenuButton<String>(
           onSelected: (value) => languageProvider.changeLanguage(Locale(value)),
           itemBuilder: (context) => [
@@ -453,54 +458,22 @@ class _ResponsiveNavigationHeaderState
   }
 
   Widget _buildUserMenuButton(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        return PopupMenuButton<String>(
-          onSelected: (value) => _handleUserMenuAction(context, value),
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'profile',
-              child: Row(
-                children: [
-                  Icon(Icons.person_outline),
-                  SizedBox(width: 12),
-                  Text('Profile'),
-                ],
+    // Public-only: Show info/help/about button instead of user menu
+    return IconButton(
+      icon: const Icon(Icons.info_outline),
+      tooltip: 'About',
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('About MultiSales'),
+            content: const Text('MultiSales is a public platform for catalog browsing and contact. For help, visit the Contact page.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
               ),
-            ),
-            const PopupMenuItem(
-              value: 'settings',
-              child: Row(
-                children: [
-                  Icon(Icons.settings_outlined),
-                  SizedBox(width: 12),
-                  Text('Settings'),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem(
-              value: 'logout',
-              child: Row(
-                children: [
-                  Icon(Icons.logout),
-                  SizedBox(width: 12),
-                  Text('Logout'),
-                ],
-              ),
-            ),
-          ],
-          child: CircleAvatar(
-            radius: 18,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: Text(
-              authProvider.firebaseUser?.email?.substring(0, 1).toUpperCase() ??
-                  'U',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            ],
           ),
         );
       },
@@ -536,19 +509,7 @@ class _ResponsiveNavigationHeaderState
     );
   }
 
-  void _handleUserMenuAction(BuildContext context, String action) {
-    switch (action) {
-      case 'profile':
-        widget.onNavigate?.call('/profile');
-        break;
-      case 'settings':
-        widget.onNavigate?.call('/settings');
-        break;
-      case 'logout':
-        context.read<AuthProvider>().signOut();
-        break;
-    }
-  }
+  // Removed user menu action handler for public-only logic
 
   List<NavigationItem> _getNavigationItems() {
     return [
@@ -692,7 +653,7 @@ class ResponsiveMobileMenu extends StatelessWidget {
             ),
           ),
 
-          // User section
+          // Public-only: Only show settings button, no user/logout/account
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -702,51 +663,10 @@ class ResponsiveMobileMenu extends StatelessWidget {
                 ),
               ),
             ),
-            child: Consumer<AuthProvider>(
-              builder: (context, authProvider, child) {
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        child: Text(
-                          authProvider.firebaseUser?.email
-                                  ?.substring(0, 1)
-                                  .toUpperCase() ??
-                              'U',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      title: Text(authProvider.firebaseUser?.email ?? 'User'),
-                      subtitle: const Text('Tap to view profile'),
-                      onTap: () => onNavigate?.call('/profile'),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => onNavigate?.call('/settings'),
-                            icon: const Icon(Icons.settings),
-                            label: const Text('Settings'),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => authProvider.signOut(),
-                            icon: const Icon(Icons.logout),
-                            label: const Text('Logout'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+            child: OutlinedButton.icon(
+              onPressed: () => onNavigate?.call('/settings'),
+              icon: const Icon(Icons.settings),
+              label: const Text('Settings'),
             ),
           ),
         ],
@@ -796,8 +716,7 @@ class _ResponsiveSearchDialogState extends State<ResponsiveSearchDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: ResponsiveContainer(
-        maxWidth: 600,
+      child: Center(
         child: Container(
           constraints: const BoxConstraints(maxHeight: 500),
           decoration: BoxDecoration(
@@ -914,8 +833,7 @@ class ResponsiveNotificationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: ResponsiveContainer(
-        maxWidth: 400,
+      child: Center(
         child: Container(
           constraints: const BoxConstraints(maxHeight: 600),
           decoration: BoxDecoration(

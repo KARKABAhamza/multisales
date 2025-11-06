@@ -1,85 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/providers/optimized_auth_provider.dart';
 
-/// Simple splash screen that shows loading while checking authentication
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthStatus();
-  }
-
-  Future<void> _checkAuthStatus() async {
-    // Allow splash screen to show for a moment
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (mounted) {
-      final authProvider = context.read<OptimizedAuthProvider>();
-      // The router will handle the redirect based on auth state
-      // This is just to ensure auth provider is properly initialized
-      await authProvider.initialize();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo or app icon
-            Icon(
-              Icons.business,
-              size: 80,
-              color: Colors.white,
-            ),
-            SizedBox(height: 24),
-
-            // App name
-            Text(
-              'MultiSales',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 8),
-
-            // Tagline
-            Text(
-              'Your Comprehensive Business Solution',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-            ),
-            SizedBox(height: 48),
-
-            // Loading indicator
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
+            CircularProgressIndicator(),
             SizedBox(height: 16),
-
-            // Loading text
-            Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-            ),
+            Text('Loading...', style: TextStyle(fontSize: 18)),
           ],
         ),
       ),

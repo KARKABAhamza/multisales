@@ -6,6 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_ar.dart';
 
 // ignore_for_file: type=lint
 
@@ -90,7 +92,9 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('en')
+    Locale('en'),
+    Locale('fr'),
+    Locale('ar'),
   ];
 
   /// No description provided for @appTitle.
@@ -350,6 +354,173 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get privacyPolicy;
+
+  /// Password reset success message
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset link sent!'**
+  String get passwordResetSent;
+
+  /// Welcome headline on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to MultiSales!'**
+  String get welcomeToMultiSales;
+
+  /// Welcome sub-message on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **"Here's what's happening with your business today."**
+  String get welcomeMessage;
+
+  /// Support/notifications banner description
+  ///
+  /// In en, this message translates to:
+  /// **'You have new updates!'**
+  String get supportDesc;
+
+  /// Section title: Testimonials & References
+  String get testimonialsAndReferences;
+
+  /// Subtitle: Customer reviews, case studies, videos or quotes.
+  String get testimonialsSubtitle;
+
+  /// Section title: They trust us
+  String get theyTrustUs;
+
+  /// Action label: Read case study
+  String get readCaseStudy;
+
+  /// Appointments title used in calendar screen
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get appointments;
+
+  /// Calendar settings label
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar Settings'**
+  String get calendarSettings;
+
+  /// Sync calendar label
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Calendar'**
+  String get syncCalendar;
+
+  // Home / Navigation
+  String get brandName;
+  String get menuHome;
+  String get menuExpertise;
+  String get menuServices;
+  String get menuAbout;
+  String get menuContact;
+  String get menuLogin;
+
+  /// Section title for the logos/products grid
+  String get sectionWhatWeSell;
+
+  /// Short intro line above the logos grid
+  String get whatWeSellIntro;
+
+  /// Button label to close dialog
+  String get closeLabel;
+
+  /// Accessibility label or title for preview dialog
+  String get previewTitle;
+
+  /// No description provided for @offlineNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'You are offline. Some features may be unavailable.'**
+  String get offlineNotice;
+
+  // Marketing content keys
+  String get heroTagline; // Short banner/tagline under brand
+  String get heroAccroche; // 1–2 short sentences hook
+
+  // About page paragraphs
+  String get aboutP1;
+  String get aboutP2;
+  String get aboutP3;
+  String get aboutP4;
+
+  // Services intro (short paragraph)
+  String get servicesIntroShort;
+
+  // Services bullets (grid items)
+  String get svcSourcing;
+  String get svcIndustrialSupplies;
+  String get svcHotelSupplies;
+  String get svcConsumables;
+  String get svcEPI;
+  String get svcLogistics;
+  String get svcContracts;
+
+  // Benefits list
+  String get benLeadTime;
+  String get benPrice;
+  String get benCompliance;
+  String get benTraceability;
+  String get benSupport;
+  String get benFlexibility;
+
+  // CTAs
+  String get ctaRequestQuotePersonalized;
+  String get ctaReassortExpress;
+  String get ctaContactPurchasing;
+  String get ctaDownloadBrochure;
+
+  // Contact sales CTA text block
+  String get contactSalesCta;
+
+  // SEO
+  String get metaDescription;
+
+  // Hero section
+  String get heroTitle;
+  String get heroSubtitle;
+  String get ctaQuote;
+  String get ctaOurExpertise;
+  String get heroLine1;
+  String get heroLine2;
+  String get heroLine3;
+
+  // Our expertise
+  String get sectionOurExpertiseTitle;
+  String get expertiseVoice;
+  String get expertiseAutomatism;
+  String get expertiseData;
+  String get expertiseVideo;
+
+  // Why choose us
+  String get sectionWhyChooseUsTitle;
+  String get whyPoint1;
+  String get whyPoint2;
+  String get whyPoint3;
+  String get whyPoint4;
+
+  // Featured services
+  String get sectionFeaturedServicesTitle;
+  String get featuredService1;
+  String get featuredService2;
+  String get featuredService3;
+  String get featuredService4;
+
+  // Final CTA
+  String get finalCtaTitle;
+  String get finalCtaSubtitle;
+  String get finalCtaContact;
+
+  // Footer
+  String get footerCompanyCasablanca;
+  String get footerAddress;
+  String get footerContact;
+  String get footerRightsReserved;
+
+  // Common CTAs
+  String get learnMore;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -361,7 +532,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'fr', 'ar'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -372,7 +543,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'ar':
+      return AppLocalizationsAr();
   }
 
   throw FlutterError(

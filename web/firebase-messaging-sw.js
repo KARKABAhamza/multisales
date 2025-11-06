@@ -10,9 +10,9 @@ firebase.initializeApp({
   apiKey: "AIzaSyBz4EfU40riAMXt3sdKFFFq5Lc_X5W6WGQ",
   authDomain: "multisales-18e57.firebaseapp.com",
   projectId: "multisales-18e57",
-  storageBucket: "multisales-18e57.appspot.com",
+  storageBucket: "multisales-18e57.firebasestorage.app",
   messagingSenderId: "967872205422",
-  appId: "1:967872205422:web:YOUR_WEB_APP_ID",
+  appId: "1:967872205422:web:b16f6c6b6d6cedc5464c7f",
   measurementId: "G-3DB4WDLJ7X"
 });
 

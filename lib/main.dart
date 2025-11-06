@@ -1,49 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'firebase_options.dart';
-import 'core/providers/auth_provider.dart';
-import 'core/providers/onboarding_provider.dart';
-import 'core/providers/training_provider.dart';
+import 'router.dart';
+import 'design/design_tokens.dart';
+import 'l10n/app_localizations.dart';
 import 'core/providers/language_provider.dart';
-import 'core/providers/firebase_provider.dart';
-import 'core/providers/appointment_provider.dart';
-import 'core/services/firestore_service.dart';
-import 'core/routing/app_router.dart';
-import 'core/themes/app_theme.dart';
-import 'core/localization/app_localizations.dart';
-import 'core/services/analytics_service.dart';
-import 'core/services/firebase_service.dart';
-import 'core/providers/oauth_provider.dart';
+import 'core/providers/optimized_auth_provider.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'core/providers/contact_provider.dart';
+import 'core/providers/messaging_provider.dart';
+import 'core/providers/storage_upload_provider.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialisation complète de Firebase avec tous les services
-  final firebaseService = FirebaseService();
-  await firebaseService.initializeFirebase(
-    options: DefaultFirebaseOptions.currentPlatform,
-    enableCrashlytics: true,
-    enablePerformance: true,
-    enableAnalytics: true,
-    enableRemoteConfig: true,
-    enableMessaging: true,
-    enableAppCheck: false, // Désactivé par défaut
-  );
-
-  // Initialiser Analytics (optionnel, déjà fait dans FirebaseService)
-  final analyticsService = AnalyticsService();
-  await analyticsService.setAnalyticsCollectionEnabled(true);
-
-  // Log de l'initialisation de l'app
-  await analyticsService.logCustomEvent(
-    eventName: 'app_launched',
-    parameters: <String, Object>{
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'platform': 'flutter_multiplatform',
-    },
-  );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MultiSalesApp());
 }
 
@@ -54,36 +25,67 @@ class MultiSalesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => FirebaseProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => OnboardingProvider()),
-        ChangeNotifierProvider(create: (_) => TrainingProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(
-            create: (_) => AppointmentProvider(
-                  firestoreService: FirestoreService(),
-                )),
-        ChangeNotifierProvider(create: (_) => OAuthProvider()),
+        ChangeNotifierProvider(create: (_) => OptimizedAuthProvider()),
+        ChangeNotifierProvider(create: (_) => ContactProvider()),
+        // Register push messaging provider (Web/Mobile)
+        ChangeNotifierProvider(create: (_) => MessagingProvider()),
+        // Storage upload (signed URL) provider
+        ChangeNotifierProvider(create: (_) => StorageUploadProvider()),
       ],
       child: Consumer<LanguageProvider>(
-        builder: (context, languageProvider, child) {
-          return MaterialApp.router(
-            title: 'MultiSales Onboarding',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.system,
-            routerConfig: AppRouter.router,
-            locale: languageProvider.currentLocale,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: AppLocalizations.supportedLocales,
-            debugShowCheckedModeBanner: false,
-          );
-        },
+        builder: (context, lang, _) => MaterialApp.router(
+          title: 'MULTISALES',
+          theme: ThemeData(
+            useMaterial3: true,
+            primaryColor: DesignTokens.primary,
+            scaffoldBackgroundColor: Colors.white,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: DesignTokens.primary,
+              brightness: Brightness.light,
+              primary: DesignTokens.primary,
+              secondary: DesignTokens.secondary,
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: DesignTokens.primary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: DesignTokens.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: DesignTokens.primary,
+                side: const BorderSide(color: DesignTokens.primary, width: 1.4),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: DesignTokens.primary),
+            ),
+            textTheme: DesignTokens.textTheme,
+          ),
+          darkTheme: ThemeData.dark(),
+          routerConfig: appRouter,
+          debugShowCheckedModeBanner: false,
+          // Localization
+          locale: lang.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ),
     );
   }

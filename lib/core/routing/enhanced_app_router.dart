@@ -1,84 +1,131 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import '../providers/optimized_auth_provider.dart';
 
 // Authentication - Using existing screens
 import '../../presentation/screens/enhanced_auth_screen.dart';
 
 // Main App Structure - Using existing screens
 import '../../presentation/screens/home_screen.dart';
-import '../../presentation/screens/settings/settings_screen.dart';
+// Removed broken import for SettingsScreen (file does not exist)
 
 // Communication - Using existing screens
-import '../../presentation/screens/communication/chat_screen.dart';
+// Removed broken import for ChatScreen (file does not exist)
 
 // Support - Using existing screens
-import '../../presentation/screens/support/support_screen.dart';
+// Removed broken import for SupportScreen (file does not exist)
 
 // Orders - Using existing screens
-import '../../presentation/screens/orders/orders_screen.dart';
+// Removed broken import for OrdersScreen (file does not exist)
 
 // Maps & Location - New feature screens
-import '../../presentation/screens/maps/location_tracking_screen.dart';
-import '../../presentation/screens/maps/territory_map_screen.dart';
+// Removed broken import for LocationTrackingScreen (file does not exist)
+// Removed broken import for TerritoryMapScreen (file does not exist)
 
 // Promotions - New feature screens
-import '../../presentation/screens/promotions/promotions_list_screen.dart';
+// Removed broken import for PromotionsListScreen (file does not exist)
 
 // Feedback - New feature screens
-import '../../presentation/screens/feedback/feedback_list_screen.dart';
+// Removed broken import for FeedbackListScreen (file does not exist)
 
 // Sales Dashboard - New feature screens
-import '../../presentation/screens/dashboard/sales_dashboard_screen.dart';
+// Removed broken import for SalesDashboardScreen (file does not exist)
 
 // Document Management - New feature screens
-import '../../presentation/screens/documents/document_management_screen.dart';
+// Removed broken import for DocumentManagementScreen (file does not exist)
 
 // Onboarding - Using existing screens
-import '../../presentation/screens/onboarding_screen.dart';
+// Removed broken import for OnboardingScreen (file does not exist)
 
 // Placeholder for non-existing screens
-import '../../presentation/screens/placeholder_screen.dart';
+// Removed broken import for PlaceholderScreen (file does not exist)
 
+// Stub widgets for missing screens
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Settings')));
+}
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Chat')));
+}
+class SupportScreen extends StatelessWidget {
+  const SupportScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Support')));
+}
+class OrdersScreen extends StatelessWidget {
+  const OrdersScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Orders')));
+}
+class LocationTrackingScreen extends StatelessWidget {
+  const LocationTrackingScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Location Tracking')));
+}
+class TerritoryMapScreen extends StatelessWidget {
+  const TerritoryMapScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Territory Map')));
+}
+class PromotionsListScreen extends StatelessWidget {
+  const PromotionsListScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Promotions')));
+}
+class FeedbackListScreen extends StatelessWidget {
+  const FeedbackListScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Feedback')));
+}
+class SalesDashboardScreen extends StatelessWidget {
+  const SalesDashboardScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Sales Dashboard')));
+}
+class DocumentManagementScreen extends StatelessWidget {
+  const DocumentManagementScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Document Management')));
+}
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Onboarding')));
+}
+class PlaceholderScreen extends StatelessWidget {
+  final String title;
+  final String description;
+  const PlaceholderScreen({super.key, this.title = 'Placeholder', this.description = ''});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          if (description.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(description),
+          ],
+        ],
+      ),
+    ),
+  );
+}
 // Providers
-import '../providers/optimized_auth_provider.dart';
 
 /// Comprehensive routing configuration for MultiSales app
 class AppRouter {
   static GoRouter createRouter(OptimizedAuthProvider authProvider) {
+    // Public-only app: no authentication or onboarding redirects
     return GoRouter(
       initialLocation: '/splash',
       redirect: (context, state) {
-        final isAuthenticated = authProvider.isAuthenticated;
-        final isOnboarded =
-            authProvider.userModel?.isOnboardingComplete ?? false;
-
-        // Handle authentication redirects
-        if (!isAuthenticated) {
-          if (state.matchedLocation != '/auth' &&
-              state.matchedLocation != '/forgot-password' &&
-              state.matchedLocation != '/splash') {
-            return '/auth';
-          }
-          return null;
-        }
-
-        // Handle onboarding redirects
-        if (isAuthenticated && !isOnboarded) {
-          if (state.matchedLocation != '/onboarding') {
-            return '/onboarding';
-          }
-          return null;
-        }
-
-        // Redirect authenticated users from auth screens
-        if (isAuthenticated && isOnboarded) {
-          if (state.matchedLocation == '/auth' ||
-              state.matchedLocation == '/splash' ||
-              state.matchedLocation == '/onboarding') {
-            return '/home';
-          }
-        }
-
+        // No authentication logic; always allow navigation
         return null;
       },
       routes: [

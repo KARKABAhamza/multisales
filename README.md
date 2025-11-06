@@ -1,6 +1,18 @@
 # MultiSales App
 
+<!-- Replace <owner>/<repo> with your repository path -->
+[![Flutter CI with Codacy](https://github.com/<owner>/<repo>/actions/workflows/flutter_codacy_ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/flutter_codacy_ci.yml)
+
 A multi-platform sales application built with Flutter and Firebase.
+
+## Architecture
+
+- MVP backend: Firebase (Firestore + Storage + Cloud Functions)
+- UI: Flutter Widgets + GoRouter, no business logic in Widgets
+- State/Logic: Provider pattern (`ChangeNotifier`) in `lib/core/providers/`, services in `lib/core/services/`
+- Data: Firestore collections and indexes, Storage for media, Functions for triggers/callables/scheduled jobs
+
+Details and the future migration path to Postgres/Supabase are documented in `docs/ARCHITECTURE.md` and the ADR `docs/architecture/adr-001-firebase-mvp.md`.
 
 ## Firebase Project Configuration
 

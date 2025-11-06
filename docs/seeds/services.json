@@ -1,0 +1,24 @@
+[
+  {
+    "id": "svc-voix-001",
+    "titre": "VOIX – Téléphonie IP & PABX",
+    "categorie": "VOIX",
+    "prixOuTarif": "Sur devis",
+    "estActif": true,
+    "imageURL": "/assets/images/services/voix.jpg",
+    "dateMiseAJour": "2025-10-01T00:00:00.000Z",
+    "description": "Intégration IPBX, SIP Trunking, migration vers VoIP, maintenance et support."
+  },
+  {
+    "id": "svc-autom-001",
+    "titre": "AUTOMATISME – Automates & SCADA",
+    "categorie": "AUTOMATISME",
+    "prixOuTarif": "Sur devis",
+    "estActif": true,
+    "imageURL": "/assets/images/services/automatisme.jpg",
+    "dateMiseAJour": "2025-10-01T00:00:00.000Z",
+    "description": "Conception et déploiement d'automatismes industriels, SCADA, supervision."
+  }
+]
+
+

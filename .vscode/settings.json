@@ -2,5 +2,8 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "github.copilot.chat.notebook.followCellExecution.enabled": true,
     "notebook.defaultFormatter": "GitHub.copilot",
-    "githubPullRequests.experimental.useQuickChat": true
+    "githubPullRequests.experimental.useQuickChat": true,
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    }
 }
