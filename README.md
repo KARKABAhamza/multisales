@@ -1,7 +1,7 @@
 # MultiSales App
 
-<!-- Replace <owner>/<repo> with your repository path -->
-[![Flutter CI with Codacy](https://github.com/<owner>/<repo>/actions/workflows/flutter_codacy_ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/flutter_codacy_ci.yml)
+<!-- CI status -->
+[![Flutter CI](https://github.com/KARKABAhamza/multisales/actions/workflows/flutter-ci.yml/badge.svg?branch=main)](https://github.com/KARKABAhamza/multisales/actions/workflows/flutter-ci.yml)
 
 A multi-platform sales application built with Flutter and Firebase.
 
