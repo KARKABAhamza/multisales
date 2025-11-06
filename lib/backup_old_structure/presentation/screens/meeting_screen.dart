@@ -128,30 +128,8 @@ class _MeetingScreenState extends State<MeetingScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: const Text('In-Person'),
-                      value: 'In-Person',
-                      groupValue: _meetingType,
-                      onChanged: (value) {
-                        setState(() {
-                          _meetingType = value!;
-                        });
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: const Text('Virtual'),
-                      value: 'Virtual',
-                      groupValue: _meetingType,
-                      onChanged: (value) {
-                        setState(() {
-                          _meetingType = value!;
-                        });
-                      },
-                    ),
-                  ),
+                  Expanded(child: _MeetingTypeOption(label: 'In-Person', value: 'In-Person', selected: _meetingType, onChanged: _setMeetingType)),
+                  Expanded(child: _MeetingTypeOption(label: 'Virtual', value: 'Virtual', selected: _meetingType, onChanged: _setMeetingType)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -402,6 +380,44 @@ class _MeetingScreenState extends State<MeetingScreen> {
             child: const Text('Add'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _setMeetingType(String value) {
+    setState(() => _meetingType = value);
+  }
+}
+
+class _MeetingTypeOption extends StatelessWidget {
+  final String label;
+  final String value;
+  final String selected;
+  final ValueChanged<String> onChanged;
+  const _MeetingTypeOption({required this.label, required this.value, required this.selected, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = value == selected;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () => onChanged(value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey),
+            const SizedBox(width: 6),
+            Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
+          ],
+        ),
       ),
     );
   }
