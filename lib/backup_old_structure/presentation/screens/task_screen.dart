@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../widgets/layout/main_scaffold.dart';
 import '../widgets/forms/custom_form_fields.dart';
 import '../widgets/buttons/custom_buttons.dart';
+import 'package:multisales_app/presentation/widgets/radio_choice_chip.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -112,9 +113,27 @@ class _TaskScreenState extends State<TaskScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(child: _PriorityOption(label: 'Low', value: 'Low', selected: _priority, onChanged: _setPriority)),
-                  Expanded(child: _PriorityOption(label: 'Medium', value: 'Medium', selected: _priority, onChanged: _setPriority)),
-                  Expanded(child: _PriorityOption(label: 'High', value: 'High', selected: _priority, onChanged: _setPriority)),
+                  Expanded(
+                    child: RadioChoiceChip(
+                      label: 'Low',
+                      selected: _priority == 'Low',
+                      onTap: () => _setPriority('Low'),
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioChoiceChip(
+                      label: 'Medium',
+                      selected: _priority == 'Medium',
+                      onTap: () => _setPriority('Medium'),
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioChoiceChip(
+                      label: 'High',
+                      selected: _priority == 'High',
+                      onTap: () => _setPriority('High'),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -211,36 +230,5 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-class _PriorityOption extends StatelessWidget {
-  final String label;
-  final String value;
-  final String selected;
-  final ValueChanged<String> onChanged;
-  const _PriorityOption({required this.label, required this.value, required this.selected, required this.onChanged});
-  @override
-  Widget build(BuildContext context) {
-    final bool isSelected = value == selected;
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () => onChanged(value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(8),
-          color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey),
-            const SizedBox(width: 6),
-            Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// Replaced by generic RadioChoiceChip
 

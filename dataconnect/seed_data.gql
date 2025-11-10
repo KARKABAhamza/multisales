@@ -1,0 +1,82 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This mutation is used to populate the database with some seed data") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+	  createdAt: "2024-04-26T12:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+	  createdAt: "2024-04-26T12:00:00Z"
+    }
+  ])
+ product_insertMany(data: [
+    {
+      id: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      name: "Example Product 1",
+      description: "This is an example product",
+      category: "Electronics",
+      price: 99.99,
+      stockQuantity: 100,
+	  createdAt: "2024-04-26T12:00:00Z"
+    },
+    {
+      id: "f1e2d3c4-b5a6-7890-1234-567890abcdef",
+      name: "Example Product 2",
+      description: "This is another example product",
+      category: "Books",
+      price: 19.99,
+      stockQuantity: 50,
+	  createdAt: "2024-04-26T12:00:00Z"
+    }
+  ])
+ review_insertMany(data: [
+    {
+      id: "11223344-5566-7788-9900-aabbccddeeff",
+      productId: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      rating: 5,
+	  createdAt: "2024-04-26T12:00:00Z"
+    },
+    {
+      id: "99887766-5544-3322-1100-ffeeccbbaa99",
+      productId: "f1e2d3c4-b5a6-7890-1234-567890abcdef",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      rating: 4,
+	  createdAt: "2024-04-26T12:00:00Z"
+    }
+  ])
+   order_insertMany(data: [
+    {
+      id: "00112233-4455-6677-8899-aabbccddeeff",
+      buyerId: "550e8400-e29b-41d4-a716-446655440000",
+      orderDate: "2024-04-26T12:00:00Z",
+      shippingAddressUsed: "123 Main St",
+      status: "Shipped",
+      totalAmount: 120.50
+    },
+    {
+      id: "99887766-5544-3322-1100-ffeeccbbaa99",
+      buyerId: "550e8400-e29b-41d4-a716-446655440001",
+      orderDate: "2024-04-27T10:00:00Z",
+      shippingAddressUsed: "456 Elm St",
+      status: "Delivered",
+      totalAmount: 60.00
+    }
+  ])
+   orderItem_insertMany(data: [
+    {
+      orderId: "00112233-4455-6677-8899-aabbccddeeff",
+      productId: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      quantity: 1,
+      unitPrice: 99.99
+    },
+    {
+      orderId: "99887766-5544-3322-1100-ffeeccbbaa99",
+      productId: "f1e2d3c4-b5a6-7890-1234-567890abcdef",
+      quantity: 2,
+      unitPrice: 19.99
+    }
+  ])
+}

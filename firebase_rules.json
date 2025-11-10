@@ -1,0 +1,58 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "onboarding_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "training_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "learning_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "companies": {
+      "$companyId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.role === 'admin' || auth.token.role === 'manager'"
+      }
+    },
+    "products": {
+      "$productId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.role === 'admin'"
+      }
+    },
+    "orders": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "suppliers": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role === 'admin'"
+    },
+    "invoices": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role === 'accountant'"
+    },
+    "inventory": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role === 'admin'"
+    },
+    ".read": false,
+    ".write": false
+  }
+}
