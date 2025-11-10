@@ -1,0 +1,45 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    
+    "products": {
+      ".indexOn": ["category", "supplier"],
+      "$productId": {
+        ".validate": "newData.hasChildren(['id', 'name', 'category', 'price', 'stockQuantity'])"
+      }
+    },
+    
+    "orders": {
+      ".indexOn": ["status", "supplierId", "orderDate"],
+      "$orderId": {
+        ".validate": "newData.hasChildren(['id', 'supplierId', 'items', 'status', 'orderDate'])",
+        "items": {
+          "$itemIndex": {
+            ".validate": "newData.hasChildren(['productId', 'quantity', 'unitPrice'])"
+          }
+        }
+      }
+    },
+    
+    "suppliers": {
+      ".indexOn": ["name"],
+      "$supplierId": {
+        ".validate": "newData.hasChildren(['id', 'name', 'email', 'phone'])"
+      }
+    },
+    
+    "invoices": {
+      ".indexOn": ["status", "orderId", "issueDate"],
+      "$invoiceId": {
+        ".validate": "newData.hasChildren(['id', 'orderId', 'issueDate', 'dueDate', 'amount', 'status'])"
+      }
+    },
+    
+    "inventory": {
+      "$productId": {
+        ".validate": "newData.isNumber() && newData.val() >= 0"
+      }
+    }
+  }
+}

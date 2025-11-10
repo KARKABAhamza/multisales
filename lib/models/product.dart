@@ -43,4 +43,30 @@ class Product {
   String toString() {
     return 'Product(id: $id, name: $name, category: $category, price: €$price, stock: $stockQuantity)';
   }
+
+  /// Convert Product to JSON for Firebase
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'category': category,
+      'price': price,
+      'stockQuantity': stockQuantity,
+      'description': description,
+      'supplier': supplier,
+    };
+  }
+
+  /// Create Product from JSON (Firebase)
+  factory Product.fromJson(Map<dynamic, dynamic> json) {
+    return Product(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      category: json['category'] as String,
+      price: (json['price'] as num).toDouble(),
+      stockQuantity: json['stockQuantity'] as int,
+      description: json['description'] as String?,
+      supplier: json['supplier'] as String?,
+    );
+  }
 }

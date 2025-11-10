@@ -48,6 +48,39 @@ class Order {
   String toString() {
     return 'Order(id: $id, supplier: $supplierId, items: ${items.length}, status: $status, total: €${totalAmount.toStringAsFixed(2)})';
   }
+
+  /// Convert Order to JSON for Firebase
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'supplierId': supplierId,
+      'items': items.map((item) => item.toJson()).toList(),
+      'status': status.name,
+      'orderDate': orderDate.toIso8601String(),
+      'deliveryDate': deliveryDate?.toIso8601String(),
+      'notes': notes,
+    };
+  }
+
+  /// Create Order from JSON (Firebase)
+  factory Order.fromJson(Map<dynamic, dynamic> json) {
+    return Order(
+      id: json['id'] as String,
+      supplierId: json['supplierId'] as String,
+      items: (json['items'] as List<dynamic>)
+          .map((item) => OrderItem.fromJson(item as Map<dynamic, dynamic>))
+          .toList(),
+      status: OrderStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => OrderStatus.pending,
+      ),
+      orderDate: DateTime.parse(json['orderDate'] as String),
+      deliveryDate: json['deliveryDate'] != null
+          ? DateTime.parse(json['deliveryDate'] as String)
+          : null,
+      notes: json['notes'] as String?,
+    );
+  }
 }
 
 /// Represents an item in an order
@@ -68,6 +101,24 @@ class OrderItem {
   @override
   String toString() {
     return 'OrderItem(productId: $productId, quantity: $quantity, unitPrice: €$unitPrice, total: €${totalPrice.toStringAsFixed(2)})';
+  }
+
+  /// Convert OrderItem to JSON for Firebase
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': productId,
+      'quantity': quantity,
+      'unitPrice': unitPrice,
+    };
+  }
+
+  /// Create OrderItem from JSON (Firebase)
+  factory OrderItem.fromJson(Map<dynamic, dynamic> json) {
+    return OrderItem(
+      productId: json['productId'] as String,
+      quantity: json['quantity'] as int,
+      unitPrice: (json['unitPrice'] as num).toDouble(),
+    );
   }
 }
 

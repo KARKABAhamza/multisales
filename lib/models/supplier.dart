@@ -43,4 +43,32 @@ class Supplier {
   String toString() {
     return 'Supplier(id: $id, name: $name, email: $email, phone: $phone)';
   }
+
+  /// Convert Supplier to JSON for Firebase
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'address': address,
+      'taxId': taxId,
+      'categories': categories,
+    };
+  }
+
+  /// Create Supplier from JSON (Firebase)
+  factory Supplier.fromJson(Map<dynamic, dynamic> json) {
+    return Supplier(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      address: json['address'] as String?,
+      taxId: json['taxId'] as String?,
+      categories: json['categories'] != null
+          ? List<String>.from(json['categories'] as List<dynamic>)
+          : null,
+    );
+  }
 }

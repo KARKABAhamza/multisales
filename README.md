@@ -13,6 +13,7 @@ MULTISALES est une plateforme B2B complète qui simplifie l'achat et la revente 
 - **Gestion de stock** : Suivi en temps réel des niveaux de stock
 - **Facturation** : Génération automatique de factures et documents comptables
 - **Gestion de documents** : Centralisation et traitement de tous les documents commerciaux
+- **🔥 Intégration Firebase** : Synchronisation en temps réel avec Firebase Realtime Database
 
 ## Catégories de produits
 
@@ -34,21 +35,43 @@ cd multisales
 # Installer les dépendances
 dart pub get
 
-# Lancer l'application
+# Lancer l'application (version locale)
 dart run bin/main.dart
+
+# Lancer avec Firebase (nécessite configuration)
+dart run bin/main_firebase.dart
 ```
+
+## 🔥 Intégration Firebase
+
+MULTISALES supporte Firebase Realtime Database pour la synchronisation en temps réel des données.
+
+**Configuration rapide:**
+
+1. Installez les dépendances: `dart pub get`
+2. Configurez `lib/config/firebase_config.dart` avec vos identifiants Firebase
+3. Mettez à jour les règles de sécurité (voir `firebase_rules.json`)
+4. Lancez: `dart run bin/main_firebase.dart`
+
+**📖 Guide complet:** Consultez [FIREBASE_INTEGRATION.md](FIREBASE_INTEGRATION.md)
+
+**Base de données:** `https://multisales-18e57-default-rtdb.firebaseio.com`
 
 ## Structure du projet
 
 ```
 multisales/
-├── bin/           # Point d'entrée de l'application
-├── lib/           # Code source principal
-│   ├── models/    # Modèles de données
-│   ├── services/  # Services métier
-│   └── utils/     # Utilitaires
-├── test/          # Tests unitaires et d'intégration
-└── pubspec.yaml   # Configuration du projet
+├── bin/                    # Point d'entrée de l'application
+│   ├── main.dart          # Version locale (sans Firebase)
+│   └── main_firebase.dart # Version avec Firebase
+├── lib/                   # Code source principal
+│   ├── config/            # Configuration Firebase
+│   ├── models/            # Modèles de données (avec JSON)
+│   ├── services/          # Services métier (local + Firebase)
+│   └── utils/             # Utilitaires
+├── test/                  # Tests unitaires et d'intégration
+├── firebase_rules.json    # Règles de sécurité Firebase
+└── pubspec.yaml           # Configuration du projet
 ```
 
 ## Licence

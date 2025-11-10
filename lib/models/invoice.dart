@@ -68,6 +68,39 @@ class Invoice {
   String toString() {
     return 'Invoice(id: $id, orderId: $orderId, amount: €${amount.toStringAsFixed(2)}, status: $status, due: ${dueDate.toString().split(' ')[0]})';
   }
+
+  /// Convert Invoice to JSON for Firebase
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'orderId': orderId,
+      'issueDate': issueDate.toIso8601String(),
+      'dueDate': dueDate.toIso8601String(),
+      'amount': amount,
+      'status': status.name,
+      'notes': notes,
+      'taxAmount': taxAmount,
+      'discountAmount': discountAmount,
+    };
+  }
+
+  /// Create Invoice from JSON (Firebase)
+  factory Invoice.fromJson(Map<dynamic, dynamic> json) {
+    return Invoice(
+      id: json['id'] as String,
+      orderId: json['orderId'] as String,
+      issueDate: DateTime.parse(json['issueDate'] as String),
+      dueDate: DateTime.parse(json['dueDate'] as String),
+      amount: (json['amount'] as num).toDouble(),
+      status: InvoiceStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => InvoiceStatus.draft,
+      ),
+      notes: json['notes'] as String?,
+      taxAmount: json['taxAmount'] != null ? (json['taxAmount'] as num).toDouble() : null,
+      discountAmount: json['discountAmount'] != null ? (json['discountAmount'] as num).toDouble() : null,
+    );
+  }
 }
 
 /// Status of an invoice

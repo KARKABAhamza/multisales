@@ -10,6 +10,10 @@ dependencies:
   # Add dependencies as needed
   http: ^1.1.0
   intl: ^0.18.0
+  # Firebase dependencies
+  firebase_core: ^2.24.0
+  firebase_database: ^10.4.0
+  firebase_auth: ^4.15.0
 
 dev_dependencies:
   lints: ^2.1.0
