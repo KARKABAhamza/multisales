@@ -253,22 +253,39 @@ exports.scheduledFirestoreExport = functions.pubsub
  */
 exports.sendContactEmail = functions
   .runWith({ secrets: ['SENDGRID_API_KEY'] })
-  .https.onCall(async (data, context) => {
+  .https.onCall(async (data, _context) => {
+  // Input normalization
   const name = data && data.name ? String(data.name).trim() : '';
   const email = data && data.email ? String(data.email).trim() : '';
   const message = data && data.message ? String(data.message).trim() : '';
+
+  // Limits and validation
+  const MAX_NAME_LEN = 200;
+  const MAX_MESSAGE_LEN = 5000;
 
   if (!name || !email || !message) {
     throw new functions.https.HttpsError('invalid-argument', 'name, email and message are required.');
   }
 
-  // Save to Firestore first
+  if (name.length > MAX_NAME_LEN) {
+    throw new functions.https.HttpsError('invalid-argument', 'name too long.');
+  }
+
+  if (message.length > MAX_MESSAGE_LEN) {
+    throw new functions.https.HttpsError('invalid-argument', 'message too long.');
+  }
+
+  if (!isValidEmail(email)) {
+    throw new functions.https.HttpsError('invalid-argument', 'email is invalid.');
+  }
+
+  // Save to Firestore first (atomic, reliable)
   let docRef;
   try {
     docRef = await db.collection('contacts').add({
-      name,
-      email,
-      message,
+      name: sanitizeText(name),
+      email: sanitizeText(email),
+      message: sanitizeText(message),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       status: 'new',
       source: 'web',
@@ -281,7 +298,7 @@ exports.sendContactEmail = functions
 
   // Send email if configured
   if (RESOLVED_SENDGRID_KEY && SENDGRID_FROM && SENDGRID_TO) {
-    const subject = `Nouveau message contact - ${name}`;
+    const subject = `Nouveau message contact - ${truncate(name, 120)}`;
     const html = `
       <p>Vous avez reçu un nouveau message via le formulaire Contact MULTISALES :</p>
       <ul>
@@ -298,13 +315,19 @@ exports.sendContactEmail = functions
       from: SENDGRID_FROM,
       subject,
       html,
-      replyTo: email,
     };
+
+    // Only include a replyTo header if the email is safe
+    const safeReplyTo = sanitizeEmailForHeader(email);
+    if (safeReplyTo) {
+      msg.replyTo = safeReplyTo;
+    }
 
     try {
       await sgMail.send(msg);
       logger.info('SendGrid: email sent', { to: SENDGRID_TO, contactId: docRef.id });
     } catch (err) {
+      // Log the error but don't expose sensitive internals to the caller
       logger.error('SendGrid: failed to send email', { error: err.toString() });
       return { success: true, savedId: docRef.id, emailSent: false, message: 'Contact saved but email failed.' };
     }
@@ -316,6 +339,7 @@ exports.sendContactEmail = functions
   return { success: true, savedId: docRef.id, emailSent: true };
 });
 
+// Helpers
 function escapeHtml(unsafe) {
   return String(unsafe)
     .replace(/&/g, '&amp;')
@@ -323,4 +347,39 @@ function escapeHtml(unsafe) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  // Simple email regex that covers common cases (don't try to be RFC perfect)
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email) && email.length <= 254;
+}
+
+function sanitizeEmailForHeader(email) {
+  if (!isValidEmail(email)) return null;
+  // Remove CR/LF and suspicious characters that could be used for header injection
+  const cleaned = String(email).replace(/[\r\n]/g, '').trim();
+  if (cleaned.length === 0 || cleaned.length > 254) return null;
+  return cleaned;
+}
+
+function sanitizeText(s) {
+  // Trim and remove control chars except newline, limit length
+  if (s == null) return '';
+  let out = String(s).trim();
+  // Remove control characters except HT (9), LF (10), CR (13) and keep printable chars
+  out = out
+    .split('')
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return code === 9 || code === 10 || code === 13 || code >= 32;
+    })
+    .join('');
+  return out;
+}
+
+function truncate(s, max) {
+  if (!s) return s;
+  return s.length > max ? s.slice(0, max - 1) + '…' : s;
 }

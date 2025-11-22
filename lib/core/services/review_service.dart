@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firestore_utils.dart';
 import 'network_service.dart';
 
 abstract class ReviewServiceBase {
@@ -28,7 +29,7 @@ class ReviewService implements ReviewServiceBase {
         rating: (data['rating'] as num?)?.toInt() ?? 5,
         comment: data['comment'] as String?,
         productId: data['productId'] as String,
-        createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+  createdAt: timestampToDate(data['createdAt']),
       );
     }).toList();
   }
@@ -40,7 +41,7 @@ class ReviewService implements ReviewServiceBase {
       'productId': productId,
       'rating': rating,
       'comment': comment,
-      'createdAt': FieldValue.serverTimestamp(),
+  'createdAt': serverTimestamp(),
     };
     final ref = await _db.collection('reviews').add(data);
     return ref.id;

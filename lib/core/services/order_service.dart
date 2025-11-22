@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firestore_utils.dart';
 import 'network_service.dart';
 import '../../models/product_models.dart';
 
@@ -27,7 +28,7 @@ class OrderService implements OrderServiceBase {
           .toList(),
       'total': total,
       'status': 'created',
-      'createdAt': FieldValue.serverTimestamp(),
+  'createdAt': serverTimestamp(),
     };
     final ref = await _db.collection('orders').add(payload);
     return ref.id;
@@ -73,7 +74,7 @@ class OrderService implements OrderServiceBase {
       items: items,
       total: total,
       status: (data['status'] ?? 'created').toString(),
-      createdAt: (data['createdAt'] is Timestamp) ? (data['createdAt'] as Timestamp).toDate() : null,
+  createdAt: timestampToDate(data['createdAt']),
     );
   }
 }

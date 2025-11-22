@@ -14,6 +14,7 @@ class _FakeContactService extends ContactService {
     required String name,
     required String email,
     required String message,
+    bool sendCopy = false,
   }) async {
     called = true;
     // Simulate a tiny delay to reflect async work
@@ -104,6 +105,7 @@ class _FailingContactService extends ContactService {
     required String name,
     required String email,
     required String message,
+    bool sendCopy = false,
   }) async {
     throw Exception('Simulated failure');
   }

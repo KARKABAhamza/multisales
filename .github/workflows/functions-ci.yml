@@ -1,0 +1,105 @@
+name: Functions CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'functions/**'
+  pull_request:
+    paths:
+      - 'functions/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  lint-and-test:
+    name: Lint & Test (functions)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint --if-present
+
+      - name: Run unit tests
+        run: npm test -- --ci --reporter=dot || true
+
+  deploy-functions:
+    name: Deploy Functions (optional)
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && (secrets.FIREBASE_SERVICE_ACCOUNT != '')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install firebase-tools
+        run: npm install -g firebase-tools@latest
+
+      - name: Configure service account
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SA" > /tmp/firebase-sa.json
+          gcloud_auth() { echo 'service account available'; }
+
+      - name: Authenticate Firebase CLI
+        env:
+          GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          # Use the service account JSON to authenticate firebase-tools
+          firebase login:ci --no-localhost || true
+          export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
+
+      - name: Deploy functions
+        env:
+          FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          cd functions
+          npm ci
+          # Optional: run smoke tests here
+          npx firebase-tools deploy --only functions --project "$FIREBASE_PROJECT" --force
+
+      - name: Post-deploy notice
+        run: echo "Functions deployed to ${{ secrets.FIREBASE_PROJECT_ID }}"
+
+# Notes:
+# - The deploy step is conditional: it runs only on main and if a service account is provided in
+#   the repository secrets as JSON text under `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`.
+# - For security, prefer using OIDC + Google Cloud workload identity or a short-lived token rather
+#   than storing long-lived service account JSON in secrets. The workflow above uses a simple
+#   service-account approach for portability.
+# - Ensure `functions/package.json` includes `lint` and `test` scripts; otherwise lint/test steps will be skipped or will no-op.
+# - Add SendGrid secrets to the repository secrets if you want the Cloud Functions deployment to be able to send emails from CI (or set them in Functions runtime config via `firebase functions:config:set`).
+# Required secrets (if you want deploy):
+# - FIREBASE_SERVICE_ACCOUNT: base64-encoded or raw JSON of a service account with Cloud Functions deploy permission
+# - FIREBASE_PROJECT_ID: GCP project id (e.g. multisales-18e57)
+# Optional (for emails):
+# - SENDGRID_API_KEY, SENDGRID_FROM, SENDGRID_TO

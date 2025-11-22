@@ -23,11 +23,11 @@ class ContactProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> submit({required String name, required String email, required String message}) async {
+  Future<bool> submit({required String name, required String email, required String message, bool sendCopy = false}) async {
     _setLoading(true);
     _setError(null);
     try {
-      await _service.submitContact(name: name, email: email, message: message);
+      await _service.submitContact(name: name, email: email, message: message, sendCopy: sendCopy);
       return true;
     } catch (e) {
       _setError(e.toString());

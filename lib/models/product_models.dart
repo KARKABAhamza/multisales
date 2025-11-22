@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/services/firestore_utils.dart';
 
 class Product {
 	final String id;
@@ -37,12 +38,8 @@ class Product {
 					? List<String>.from(data['imageUrls'] as List)
 					: const <String>[],
 			active: (data['active'] as bool?) ?? true,
-			createdAt: (data['createdAt'] is Timestamp)
-					? (data['createdAt'] as Timestamp).toDate()
-					: null,
-			updatedAt: (data['updatedAt'] is Timestamp)
-					? (data['updatedAt'] as Timestamp).toDate()
-					: null,
+	    createdAt: timestampToDate(data['createdAt']),
+	    updatedAt: timestampToDate(data['updatedAt']),
 		);
 	}
 
@@ -54,8 +51,8 @@ class Product {
 			'stock': stock,
 			'imageUrls': imageUrls,
 			'active': active,
-			'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
-			'updatedAt': FieldValue.serverTimestamp(),
+			'createdAt': dateToFirestore(createdAt),
+			'updatedAt': serverTimestamp(),
 		};
 	}
 }

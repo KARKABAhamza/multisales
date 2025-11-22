@@ -20,6 +20,7 @@ class _ContactSectionState extends State<ContactSection> {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _messageCtrl = TextEditingController();
+  bool _sendCopy = false;
 
   // Contact data (change if needed)
   static const _phone = '+212 784007410';
@@ -76,6 +77,7 @@ class _ContactSectionState extends State<ContactSection> {
       name: _nameCtrl.text.trim(),
       email: _emailCtrl.text.trim(),
       message: _messageCtrl.text.trim(),
+      sendCopy: _sendCopy,
     );
 
     if (ok) {
@@ -353,6 +355,17 @@ class _ContactSectionState extends State<ContactSection> {
               decoration: const InputDecoration(labelText: 'Message', prefixIcon: Icon(Icons.message)),
               maxLines: 6,
               validator: (v) => (v == null || v.trim().length < 10) ? 'Message trop court' : null,
+            ),
+            const SizedBox(height: 12),
+            CheckboxListTile(
+              value: _sendCopy,
+              onChanged: (v) {
+                setState(() {
+                  _sendCopy = v ?? false;
+                });
+              },
+              title: const Text("M'envoyer une copie par email"),
+              controlAffinity: ListTileControlAffinity.leading,
             ),
             const SizedBox(height: 12),
             ElevatedButton.icon(
