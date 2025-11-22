@@ -9,6 +9,8 @@ on:
     paths:
       - 'functions/**'
 
+  workflow_dispatch: {}
+
 permissions:
   contents: read
   id-token: write
@@ -44,7 +46,8 @@ jobs:
         run: npm run lint --if-present
 
       - name: Run unit tests
-        run: npm test -- --ci --reporter=dot || true
+        # Run tests and make job fail on test failures. Use --exit to ensure mocha exits.
+        run: npm ci && npm run lint --if-present && npm test
 
   deploy-functions:
     name: Deploy Functions (optional)
