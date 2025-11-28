@@ -37,4 +37,11 @@ class ContactService {
       }
     }
   }
+
+  /// Save the contact settings document used by the frontend.
+  /// `data` should contain keys: phone, email, address, hours
+  Future<void> saveSettingsContact({required Map<String, dynamic> data, String path = 'settings/contact'}) async {
+    await _network.ensureOnline();
+    await _db.doc(path).set(data, SetOptions(merge: true));
+  }
 }

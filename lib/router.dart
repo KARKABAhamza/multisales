@@ -9,6 +9,7 @@ import 'pages/legal_page.dart';
 import 'pages/service_detail_page.dart';
 import 'pages/expertise_page.dart';
 import 'presentation/widgets/bottom_nav_shell.dart';
+import 'presentation/screens/admin/contact_settings_page.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -45,5 +46,7 @@ final GoRouter appRouter = GoRouter(
     // Non-tab routes
     GoRoute(path: '/a-propos', builder: (context, state) => const AboutPage()),
     GoRoute(path: '/legal', builder: (context, state) => const LegalPage()),
+    // Admin routes (protected)
+    GoRoute(path: '/admin/contact-settings', builder: (context, state) => const ContactSettingsPage()),
   ],
 );

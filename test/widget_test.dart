@@ -6,15 +6,22 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:ui' as ui;
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:multisales_app/main.dart';
+import 'package:firebase_core/firebase_core.dart';
+// ignore: unused_import
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 void main() {
-  testWidgets('MultiSales app smoke test', (WidgetTester tester) async {
-    // Ensure a sufficiently large test surface to avoid layout overflows
   TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseCoreMocks();
+
+  testWidgets('MultiSales app smoke test', (WidgetTester tester) async {
+    // Mock Firebase initialization
+    await Firebase.initializeApp();
     tester.view.physicalSize = const ui.Size(1280, 1024);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
