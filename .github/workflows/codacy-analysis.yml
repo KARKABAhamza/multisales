@@ -2,7 +2,7 @@ name: Codacy Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feat/functions-tests ]
   pull_request:
     branches: [ main ]
 
