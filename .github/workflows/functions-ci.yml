@@ -14,6 +14,9 @@ on:
       - main
       - master
 
+permissions:
+  contents: read
+
 jobs:
   functions-test-and-lint:
     name: Functions Tests and Linting
