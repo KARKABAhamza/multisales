@@ -1,0 +1,105 @@
+name: PR Auto-Label
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-label:
+    name: Auto-label PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitHub CLI
+        run: |
+          # GitHub CLI is pre-installed on GitHub Actions runners
+          gh --version
+
+      - name: Auto-label based on files changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          
+          # Get changed files
+          CHANGED_FILES=$(gh pr view $PR_NUMBER --json files --jq '.files[].path')
+          
+          # Label based on changed files
+          if echo "$CHANGED_FILES" | grep -q "^lib/"; then
+            gh pr edit $PR_NUMBER --add-label "flutter"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^test/"; then
+            gh pr edit $PR_NUMBER --add-label "tests"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^docs/\|\.md$"; then
+            gh pr edit $PR_NUMBER --add-label "documentation"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^\.github/workflows/"; then
+            gh pr edit $PR_NUMBER --add-label "ci/cd"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^functions/"; then
+            gh pr edit $PR_NUMBER --add-label "firebase-functions"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "firebase\|firestore"; then
+            gh pr edit $PR_NUMBER --add-label "firebase"
+          fi
+          
+          echo "✅ Auto-labeling complete"
+
+      - name: Check PR size
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          
+          # Get PR stats
+          ADDITIONS=$(gh pr view $PR_NUMBER --json additions --jq '.additions')
+          DELETIONS=$(gh pr view $PR_NUMBER --json deletions --jq '.deletions')
+          TOTAL_CHANGES=$((ADDITIONS + DELETIONS))
+          
+          echo "PR #$PR_NUMBER changes: +$ADDITIONS -$DELETIONS (total: $TOTAL_CHANGES)"
+          
+          # Add size labels
+          if [ $TOTAL_CHANGES -lt 50 ]; then
+            gh pr edit $PR_NUMBER --add-label "size/XS"
+          elif [ $TOTAL_CHANGES -lt 200 ]; then
+            gh pr edit $PR_NUMBER --add-label "size/S"
+          elif [ $TOTAL_CHANGES -lt 500 ]; then
+            gh pr edit $PR_NUMBER --add-label "size/M"
+          elif [ $TOTAL_CHANGES -lt 1000 ]; then
+            gh pr edit $PR_NUMBER --add-label "size/L"
+          else
+            gh pr edit $PR_NUMBER --add-label "size/XL"
+            # Comment if PR is very large
+            if [ $TOTAL_CHANGES -gt 1000 ]; then
+              gh pr comment $PR_NUMBER --body "⚠️ This PR is quite large ($TOTAL_CHANGES lines changed). Consider breaking it into smaller PRs for easier review."
+            fi
+          fi
+
+      - name: Check for breaking changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          
+          # Check PR title and body for breaking change indicators
+          PR_TITLE=$(gh pr view $PR_NUMBER --json title --jq '.title')
+          PR_BODY=$(gh pr view $PR_NUMBER --json body --jq '.body')
+          
+          if echo "$PR_TITLE $PR_BODY" | grep -iq "breaking\|BREAKING CHANGE"; then
+            gh pr edit $PR_NUMBER --add-label "breaking-change"
+            echo "⚠️ Breaking change detected"
+          fi

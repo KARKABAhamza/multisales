@@ -14,6 +14,95 @@
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: Create PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"create",
+				"--web"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: View PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"view",
+				"--web"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: Check CI Status",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"checks"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: Watch Workflow",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch"
+			],
+			"group": "none",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: List Issues",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"issue",
+				"list"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: List PRs",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"list"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: Sync Fork",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/sync-fork.sh",
+			"windows": {
+				"command": "${workspaceFolder}/scripts/sync-fork.bat"
+			},
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "GitHub: Quick PR",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/quick-pr.sh",
+			"windows": {
+				"command": "${workspaceFolder}/scripts/quick-pr.bat"
+			},
+			"group": "none",
+			"problemMatcher": []
 		}
 	]
 }

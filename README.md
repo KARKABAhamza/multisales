@@ -34,6 +34,7 @@ Details and the future migration path to Postgres/Supabase are documented in `do
 
 - Flutter SDK installed
 - Firebase CLI installed
+- GitHub CLI (`gh`) for development workflow (optional but recommended)
 - Android Studio / VS Code with Flutter plugin
 
 ### Firebase Setup
@@ -129,6 +130,34 @@ lib/
 - ✅ Windows
 - ✅ macOS
 - ⚠️ Linux (needs configuration)
+
+## Development Workflow
+
+This project uses GitHub CLI (`gh`) for streamlined development. See our guides:
+
+- **[Contributing Guide](CONTRIBUTING.md)** - Complete workflow with GitHub CLI examples
+- **[GitHub CLI Guide](docs/GITHUB_CLI_GUIDE.md)** - Comprehensive `gh` command reference
+- **Helper Scripts** in `scripts/` directory:
+  - `new-feature.sh` - Create feature branches
+  - `quick-pr.sh` - Quick PR creation
+  - `sync-fork.sh` - Sync with upstream
+  - `check-ci.sh` - Check CI status
+
+### Quick Start with GitHub CLI
+
+```bash
+# Fork and clone
+gh repo fork KARKABAhamza/multisales --clone
+
+# Start new feature
+./scripts/new-feature.sh my-feature 123
+
+# Create PR
+./scripts/quick-pr.sh
+
+# Check CI status
+./scripts/check-ci.sh
+```
 
 ## Notes
 
