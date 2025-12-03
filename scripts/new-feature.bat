@@ -33,7 +33,13 @@ git checkout -b !BRANCH_NAME!
 REM If issue number provided, assign to yourself
 if not "%ISSUE_NUMBER%"=="" (
   echo Assigning issue #%ISSUE_NUMBER% to you...
-  gh issue develop %ISSUE_NUMBER% --name !BRANCH_NAME! 2>nul || echo Note: Could not auto-assign issue
+  gh issue develop %ISSUE_NUMBER% --name !BRANCH_NAME! 2>nul
+  if errorlevel 1 (
+    echo Note: Could not auto-assign issue. Possible reasons:
+    echo   - Issue #%ISSUE_NUMBER% doesn't exist
+    echo   - You don't have permissions
+    echo   - GitHub CLI is not authenticated (run 'gh auth login'^)
+  )
 )
 
 echo.

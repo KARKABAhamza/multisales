@@ -153,8 +153,8 @@ gh run watch                              # Watch new run
 # List PRs by you that are open
 gh pr list --author @me --json number,title | jq '.[] | "\(.number): \(.title)"'
 
-# Find failed workflow runs in last 24h
-gh run list --created ">=$(date -u -d '1 day ago' '+%Y-%m-%d')" --status failure --json databaseId,name,conclusion
+# Find failed workflow runs (recent, limit 10 for cross-platform compatibility)
+gh run list --status failure --limit 10 --json databaseId,name,conclusion
 
 # Get PR review status
 gh pr view 45 --json reviewDecision,reviews | jq '.reviewDecision'

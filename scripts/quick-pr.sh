@@ -50,7 +50,7 @@ if gh pr view > /dev/null 2>&1; then
 fi
 
 # Extract issue number from branch name if present
-ISSUE_NUMBER=$(echo "$CURRENT_BRANCH" | grep -oE 'issue-[0-9]+' | grep -oE '[0-9]+' || echo "")
+ISSUE_NUMBER=$(echo "$CURRENT_BRANCH" | grep -oE '[0-9]+' | head -n1 || echo "")
 
 # Create PR
 echo "Creating pull request..."
