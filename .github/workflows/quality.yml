@@ -26,10 +26,10 @@ jobs:
           # project-token is optional; comment it out to avoid invalid secrets access when not set
           # To enable upload to Codacy, create a repository secret named CODACY_PROJECT_TOKEN
           # and uncomment the line below:
-          # project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           format: sarif
           output: codacy-results.sarif
-          upload: false
+          upload: true
 
       - name: Upload SARIF to GitHub Code Scanning (Codacy)
         uses: github/codeql-action/upload-sarif@v3

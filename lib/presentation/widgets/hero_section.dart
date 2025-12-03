@@ -12,7 +12,8 @@ class HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width >= 900;
-    final heroHeight = isWide ? 420.0 : 420.0;
+    // Keep a fixed hero height and make inner content scrollable to avoid overflows on small viewports/tests.
+    final heroHeight = 420.0;
 
     return SizedBox(
       width: double.infinity,
@@ -43,9 +44,11 @@ class HeroSection extends StatelessWidget {
           ),
 
           // Content
-          Padding(
+          // Scrollable content wrapper to prevent RenderFlex overflow in reduced test heights
+          SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: isWide ? 64.0 : 20.0, vertical: 28),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   flex: isWide ? 6 : 1,
