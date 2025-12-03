@@ -14,27 +14,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java (required by Codacy CLI)
-        uses: actions/setup-java@v4
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
         with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Install Codacy CLI
-        run: |
-          curl -Ls https://coverage.codacy.com/get.sh | bash
-
-      - name: Run Codacy Analysis
-        env:
-          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
-        run: |
-          codacy-analysis-cli analyze \
-            --directory . \
-            --verbose \
-            --output results.json || true
-
-      - name: Upload results artifact
-        uses: actions/upload-artifact@v4
+          output: results.sarif
+          format: sarif
+          gh-code-scanning-compat: true
+          max-allowed-issues: 2147483647
+        continue-on-error: true
+      
+      - name: Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: codacy-results
-          path: results.json
+          sarif_file: results.sarif
+        continue-on-error: true
+
