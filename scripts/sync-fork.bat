@@ -1,7 +1,7 @@
 @echo off
 REM Script to sync your fork with the upstream repository
 
-setlocal
+setlocal enabledelayedexpansion
 
 echo Syncing fork with upstream...
 

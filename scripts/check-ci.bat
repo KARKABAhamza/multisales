@@ -1,7 +1,7 @@
 @echo off
 REM Script to check CI status for current branch
 
-setlocal
+setlocal enabledelayedexpansion
 
 REM Get current branch
 for /f "tokens=*" %%a in ('git branch --show-current') do set CURRENT_BRANCH=%%a
