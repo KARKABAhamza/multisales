@@ -1,0 +1,78 @@
+name: Functions CI
+
+on:
+  push:
+    paths:
+      - 'functions/**'
+    branches:
+      - main
+      - master
+  pull_request:
+    paths:
+      - 'functions/**'
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  functions-test-and-lint:
+    name: Functions Tests and Linting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting and save results
+        run: npm run lint > lint-results.txt 2>&1 || true
+        continue-on-error: true
+
+      - name: Upload lint results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: functions-lint-results
+          path: functions/lint-results.txt
+        if: always()
+
+      - name: Set up Java (required by Codacy CLI)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Codacy CLI
+        run: |
+          curl -Ls https://coverage.codacy.com/get.sh | bash
+
+      - name: Run Codacy Analysis on Functions
+        env:
+          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+        run: |
+          cd ${{ github.workspace }}/functions
+          codacy-analysis-cli analyze \
+            --directory . \
+            --verbose \
+            --output functions-results.json || true
+        continue-on-error: true
+
+      - name: Upload Codacy results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codacy-functions-results
+          path: functions/functions-results.json
+        if: always()
