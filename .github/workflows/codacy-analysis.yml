@@ -2,7 +2,7 @@ name: Codacy Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feat/functions-tests ]
   pull_request:
     branches: [ main ]
 
@@ -10,35 +10,38 @@ jobs:
   codacy:
     name: Codacy Static Analysis
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Set up Java (required by Codacy CLI)
+        uses: actions/setup-java@v4
         with:
-          node-version: 18
+          distribution: temurin
+          java-version: '17'
 
-      - name: Analyze (SARIF)
+      - name: Install Codacy CLI
+        run: |
+          curl -Ls https://coverage.codacy.com/get.sh | bash
+
+      - name: Run Codacy Analysis
         env:
           CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
         run: |
-          npx @codacy/cli analyze --format sarif --output codacy-results.sarif --fail-on-issues false || true
+          codacy-analysis-cli analyze \
+            --directory . \
+            --verbose \
+            --format sarif \
+            --output results.sarif || true
 
-      - name: Analyze (text)
-        env:
-          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
-        run: |
-          npx @codacy/cli analyze --format text --output codacy-results.txt --fail-on-issues false || true
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
 
-      - name: Upload Codacy Text Results
+      - name: Upload results artifact
         uses: actions/upload-artifact@v4
         with:
-          name: codacy-results-text
-          path: codacy-results.txt
-
-      - name: Upload Codacy SARIF
-        uses: actions/upload-artifact@v4
-        with:
-          name: codacy-results-sarif
-          path: codacy-results.sarif
+          name: codacy-results
+          path: results.sarif
