@@ -1,4 +1,4 @@
-name: Codacy Coverage Reporter
+name: Codacy Coverage
 
 on:
   push:
@@ -8,39 +8,46 @@ on:
 
 jobs:
   coverage:
-    name: Report Coverage to Codacy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          channel: stable
-          cache: true
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run tests with coverage
-        run: flutter test --coverage
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Install Codacy CLI
         run: |
-          curl -Ls https://coverage.codacy.com/get.sh | bash
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run tests and generate coverage
+        run: |
+          # Adjust test command as needed for this repository
+          pytest --maxfail=1 --disable-warnings -q --cov=./ --cov-report=xml
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
 
       - name: Upload coverage to Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
-          # Convert Flutter lcov.info (located at coverage/lcov.info)
-          codacy-coverage-reporter report \
-            -l Dart \
-            -r coverage/lcov.info || true
+          set -e
+          if [ -z "${CODACY_PROJECT_TOKEN}" ]; then
+            echo "\nWarning: CODACY_PROJECT_TOKEN is not set. Skipping Codacy upload.\n"
+            exit 0
+          fi
+
+          echo "CODACY_PROJECT_TOKEN found; running Codacy coverage upload..."
+
+          # Install Codacy coverage reporter (choose the appropriate tool for your project)
+          python -m pip install --upgrade codacy-coverage
+
+          # Run the uploader. If your project needs the CLI instead, replace with the CLI invocation.
+          codacy-coverage -r coverage.xml
