@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import '../../design/design_tokens.dart';
 import '../../core/providers/contact_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class ContactSection extends StatefulWidget {
   final VoidCallback? onRequestQuote;
@@ -86,6 +87,31 @@ class _ContactSectionState extends State<ContactSection> {
       _messageCtrl.clear();
     } else {
       _showSnack('Échec de l’envoi. Réessayez plus tard.');
+    }
+  }
+
+  Future<void> _showDownloadConfirmation() async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.downloadConfirmTitle),
+        content: Text(t.downloadConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.downloadConfirmCancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.downloadConfirmProceed),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && widget.onDownloadBrochure != null) {
+      widget.onDownloadBrochure!();
     }
   }
 
@@ -302,7 +328,7 @@ class _ContactSectionState extends State<ContactSection> {
             const SizedBox(width: 12),
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: widget.onDownloadBrochure,
+                onPressed: _showDownloadConfirmation,
                 icon: const Icon(Icons.picture_as_pdf),
                 label: const Text('Télécharger brochure (PDF)'),
                 style: OutlinedButton.styleFrom(

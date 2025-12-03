@@ -257,6 +257,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ctaDownloadBrochure => 'Télécharger la brochure produits (PDF)';
 
   @override
+  String get downloadConfirmTitle => 'Confirmer le téléchargement';
+  @override
+  String get downloadConfirmMessage => 'Vous êtes sur le point de télécharger notre brochure produits en format PDF. Souhaitez-vous continuer ?';
+  @override
+  String get downloadConfirmCancel => 'Annuler';
+  @override
+  String get downloadConfirmProceed => 'Télécharger';
+
+  @override
   String get contactSalesCta => 'Besoin d’un réassort rapide ou d’un devis personnalisé ? Contactez-nous : +212 784007410 — contact@multisales.ma. Nous étudions votre besoin et proposons une solution d’approvisionnement adaptée sous 24–48h.';
 
   @override

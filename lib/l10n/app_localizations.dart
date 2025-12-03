@@ -472,6 +472,12 @@ abstract class AppLocalizations {
   String get ctaContactPurchasing;
   String get ctaDownloadBrochure;
 
+  // Download confirmation dialog
+  String get downloadConfirmTitle;
+  String get downloadConfirmMessage;
+  String get downloadConfirmCancel;
+  String get downloadConfirmProceed;
+
   // Contact sales CTA text block
   String get contactSalesCta;
 
