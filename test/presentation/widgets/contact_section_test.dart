@@ -96,6 +96,143 @@ void main() {
     // Expect the error snackbar message
     expect(find.text('Échec de l’envoi. Réessayez plus tard.'), findsOneWidget);
   });
+
+  testWidgets('ContactSection shows download confirmation dialog when brochure button tapped', (tester) async {
+    bool downloadCalled = false;
+    final fakeService = _FakeContactService();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ContactProvider(service: fakeService),
+          ),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: ContactSection(
+                onDownloadBrochure: () {
+                  downloadCalled = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Find and tap the download brochure button
+    final downloadButton = find.text('Télécharger brochure (PDF)');
+    expect(downloadButton, findsOneWidget);
+    await tester.ensureVisible(downloadButton);
+    await tester.tap(downloadButton);
+    await tester.pumpAndSettle();
+
+    // Verify that the confirmation dialog appears
+    expect(find.text('Confirmer le téléchargement'), findsOneWidget);
+    expect(find.text('Vous êtes sur le point de télécharger notre brochure produits en format PDF. Souhaitez-vous continuer ?'), findsOneWidget);
+
+    // Verify that cancel and proceed buttons are present
+    expect(find.text('Annuler'), findsOneWidget);
+    expect(find.text('Télécharger'), findsOneWidget);
+
+    // Download should not have been called yet
+    expect(downloadCalled, isFalse);
+  });
+
+  testWidgets('ContactSection download is cancelled when user taps cancel', (tester) async {
+    bool downloadCalled = false;
+    final fakeService = _FakeContactService();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ContactProvider(service: fakeService),
+          ),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: ContactSection(
+                onDownloadBrochure: () {
+                  downloadCalled = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Find and tap the download brochure button
+    final downloadButton = find.text('Télécharger brochure (PDF)');
+    await tester.ensureVisible(downloadButton);
+    await tester.tap(downloadButton);
+    await tester.pumpAndSettle();
+
+    // Tap cancel button
+    final cancelButton = find.text('Annuler');
+    await tester.tap(cancelButton);
+    await tester.pumpAndSettle();
+
+    // Download should not have been called
+    expect(downloadCalled, isFalse);
+
+    // Dialog should be dismissed
+    expect(find.text('Confirmer le téléchargement'), findsNothing);
+  });
+
+  testWidgets('ContactSection download proceeds when user confirms', (tester) async {
+    bool downloadCalled = false;
+    final fakeService = _FakeContactService();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ContactProvider(service: fakeService),
+          ),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: ContactSection(
+                onDownloadBrochure: () {
+                  downloadCalled = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Find and tap the download brochure button
+    final downloadButton = find.text('Télécharger brochure (PDF)');
+    await tester.ensureVisible(downloadButton);
+    await tester.tap(downloadButton);
+    await tester.pumpAndSettle();
+
+    // Verify the dialog appeared
+    expect(find.text('Confirmer le téléchargement'), findsOneWidget);
+
+    // Find the proceed button in the dialog (ElevatedButton with text "Télécharger")
+    final proceedButton = find.descendant(
+      of: find.byType(AlertDialog),
+      matching: find.widgetWithText(ElevatedButton, 'Télécharger'),
+    );
+    expect(proceedButton, findsOneWidget);
+    await tester.tap(proceedButton);
+    await tester.pumpAndSettle();
+
+    // Download should have been called
+    expect(downloadCalled, isTrue);
+
+    // Dialog should be dismissed
+    expect(find.text('Confirmer le téléchargement'), findsNothing);
+  });
 }
 
 class _FailingContactService extends ContactService {
