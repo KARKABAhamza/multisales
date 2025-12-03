@@ -215,9 +215,16 @@ void main() {
     await tester.tap(downloadButton);
     await tester.pumpAndSettle();
 
-    // Tap the proceed button
-    final proceedButton = find.text('Télécharger');
-    await tester.tap(proceedButton.last);
+    // Verify the dialog appeared
+    expect(find.text('Confirmer le téléchargement'), findsOneWidget);
+
+    // Find the proceed button in the dialog (ElevatedButton with text "Télécharger")
+    final proceedButton = find.descendant(
+      of: find.byType(AlertDialog),
+      matching: find.widgetWithText(ElevatedButton, 'Télécharger'),
+    );
+    expect(proceedButton, findsOneWidget);
+    await tester.tap(proceedButton);
     await tester.pumpAndSettle();
 
     // Download should have been called
