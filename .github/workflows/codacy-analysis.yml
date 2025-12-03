@@ -25,7 +25,18 @@ jobs:
         run: |
           curl -Ls https://coverage.codacy.com/get.sh | bash
 
+      - name: Check Codacy token
+        id: codacy-token-check
+        run: |
+          if [ -z "${{ secrets.CODACY_API_TOKEN }}" ]; then
+            echo "::warning title=Codacy token missing::Set CODACY_API_TOKEN in GitHub Secrets to enable Codacy analysis."
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run Codacy Analysis
+        if: steps.codacy-token-check.outputs.has_token == 'true'
         env:
           CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
         run: |
