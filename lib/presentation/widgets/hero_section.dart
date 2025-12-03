@@ -49,10 +49,11 @@ class HeroSection extends StatelessWidget {
               children: [
                 Expanded(
                   flex: isWide ? 6 : 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                       Text(
                         'MULTISALES — Fournisseur & Central d’Achat Multicatégorie',
                         style: Theme.of(context).textTheme.displayMedium?.copyWith(
@@ -95,6 +96,7 @@ class HeroSection extends StatelessWidget {
                         ],
                       ),
                     ],
+                  ),
                   ),
                 ),
 

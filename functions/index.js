@@ -253,7 +253,7 @@ exports.scheduledFirestoreExport = functions.pubsub
  */
 exports.sendContactEmail = functions
   .runWith({ secrets: ['SENDGRID_API_KEY'] })
-  .https.onCall(async (data, context) => {
+  .https.onCall(async (data, _context) => {
   const name = data && data.name ? String(data.name).trim() : '';
   const email = data && data.email ? String(data.email).trim() : '';
   const message = data && data.message ? String(data.message).trim() : '';

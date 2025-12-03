@@ -26,6 +26,7 @@ class SarlauAppBar extends StatelessWidget implements PreferredSizeWidget {
           title: InkWell(
             onTap: () => context.go('/'),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Replace with your branded asset if desired
                 Image.asset(
@@ -34,7 +35,13 @@ class SarlauAppBar extends StatelessWidget implements PreferredSizeWidget {
                   errorBuilder: (_, __, ___) => Icon(Icons.business, size: 32, color: onPrimary),
                 ),
                 const SizedBox(width: 12),
-                Text(t.brandName, style: TextStyle(letterSpacing: 1.2, color: onPrimary, fontWeight: FontWeight.w600)),
+                Flexible(
+                  child: Text(
+                    t.brandName,
+                    style: TextStyle(letterSpacing: 1.2, color: onPrimary, fontWeight: FontWeight.w600),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           ),
