@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
+import '../core/services/tracing_service.dart';
 
 /// Initialize Firebase using the generated Firebase options.
 /// If you need to override the Realtime Database URL, pass `databaseUrl`.
 Future<FirebaseApp> initFirebase({String? databaseUrl}) async {
+  TracingService.startSpan('firebase_init_start');
   FirebaseOptions options = DefaultFirebaseOptions.currentPlatform;
 
   if (databaseUrl != null && databaseUrl.isNotEmpty) {
@@ -20,5 +22,7 @@ Future<FirebaseApp> initFirebase({String? databaseUrl}) async {
     );
   }
 
-  return Firebase.initializeApp(options: options);
+  final app = await Firebase.initializeApp(options: options);
+  TracingService.endSpan();
+  return app;
 }

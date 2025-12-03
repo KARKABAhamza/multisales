@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// Messaging is currently disabled; avoid importing firebase_messaging.
 
 import '../services/messaging_service.dart';
 import '../services/push_config.dart';
@@ -12,14 +12,14 @@ class MessagingProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _fcmToken;
-  NotificationSettings? _settings;
-  RemoteMessage? _lastMessage;
+  Map<String, dynamic>? _settings;
+  Map<String, dynamic>? _lastMessage;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get fcmToken => _fcmToken;
-  NotificationSettings? get settings => _settings;
-  RemoteMessage? get lastMessage => _lastMessage;
+  Map<String, dynamic>? get settings => _settings;
+  Map<String, dynamic>? get lastMessage => _lastMessage;
 
   /// Initializes push with a permission prompt and token fetch.
   ///
@@ -32,10 +32,8 @@ class MessagingProvider with ChangeNotifier {
       }
 
       // Only attempt token retrieval if permission is granted or not determined (some platforms).
-      final status = _settings?.authorizationStatus;
-      if (status == null ||
-          status == AuthorizationStatus.authorized ||
-          status == AuthorizationStatus.provisional) {
+        final status = _settings?['authorizationStatus'] as String?;
+        if (status == null || status == 'authorized' || status == 'provisional') {
         final token = await _service.getToken(webVapidKey: kWebVapidKey.isEmpty ? null : kWebVapidKey);
         _fcmToken = token;
       }

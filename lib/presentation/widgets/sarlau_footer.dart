@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../design/design_tokens.dart';
 import '../../l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SarlauFooter extends StatelessWidget {
   const SarlauFooter({super.key});
@@ -38,6 +39,23 @@ class SarlauFooter extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
           ),
           const SizedBox(height: 12),
+          // Social icons row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                tooltip: 'LinkedIn',
+                icon: const Icon(Icons.public, color: Colors.white),
+                onPressed: () => _open('https://www.linkedin.com/company/multisales'),
+              ),
+              IconButton(
+                tooltip: 'Facebook',
+                icon: const Icon(Icons.thumb_up_alt_outlined, color: Colors.white),
+                onPressed: () => _open('https://www.facebook.com/multisales'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           Text(
             '© $year MULTISALES. ${t.footerRightsReserved}',
             textAlign: TextAlign.center,
@@ -46,5 +64,12 @@ class SarlauFooter extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Future<void> _open(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }

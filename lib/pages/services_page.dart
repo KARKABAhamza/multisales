@@ -47,7 +47,8 @@ class ServicesPage extends StatelessWidget {
           // Section contact au-dessus du footer
           ContactSection(
             onRequestQuote: () => context.go('/contact'),
-            onDownloadBrochure: () => launchUrl(Uri.parse('https://example.com/brochure.pdf')),
+            // Use an actual brochure path served by Flutter web assets (update if different)
+            onDownloadBrochure: () => launchUrl(Uri.parse('/assets/documents/brochure_products.pdf')),
           ),
           const SizedBox(height: 24),
           const SarlauFooter(),

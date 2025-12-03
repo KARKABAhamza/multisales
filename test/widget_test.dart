@@ -6,18 +6,15 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:ui' as ui;
-import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:multisales_app/main.dart';
 import 'package:firebase_core/firebase_core.dart';
-// ignore: unused_import
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  setupFirebaseCoreMocks();
+  // No explicit Firebase core mocks needed with current setup
 
   testWidgets('MultiSales app smoke test', (WidgetTester tester) async {
     // Mock Firebase initialization

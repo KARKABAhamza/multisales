@@ -6,7 +6,6 @@ import 'package:multisales_app/pages/contact_page.dart';
 import 'package:multisales_app/l10n/app_localizations.dart' as l10n;
 import 'package:multisales_app/core/providers/optimized_auth_provider.dart';
 import 'package:multisales_app/core/services/auth_service.dart';
-import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class _MockAuthService extends AuthService {
@@ -16,7 +15,7 @@ class _MockAuthService extends AuthService {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  setupFirebaseCoreMocks();
+  // No explicit Firebase core mocks needed with current setup
   // ignore: discarded_futures
   Firebase.initializeApp();
 

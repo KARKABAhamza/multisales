@@ -31,10 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Firebase - Core dependencies requested
-  firebase_core: ^4.2.1
-  firebase_auth: ^6.1.2
-  firebase_database: ^12.0.4
+  # Firebase - FlutterFire compatible versions
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  firebase_database: ^10.4.9
 
   # NOTE: Other Firebase packages (Firestore, Storage, Messaging, Analytics,
   # Crashlytics, Remote Config, Dynamic Links, App Check, Cloud Functions)
@@ -95,7 +95,8 @@ dependencies:
 
   # Maps & Location
   google_maps_flutter: ^2.5.0
-  geolocator: ^14.0.2
+  # Temporarily removed due to web dependency conflicts with firebase_auth_web
+  # geolocator: ^14.0.2
 
   # Chat & Communication (Fixed compatibility)
   agora_rtc_engine: ^6.3.2  # Video calling
@@ -110,9 +111,10 @@ dependencies:
 
   # File selection
   file_selector: ^1.0.2
-  cloud_firestore: ^6.1.0
-  firebase_messaging: ^16.0.4
-  cloud_functions: ^6.0.4
+  cloud_firestore: ^4.17.5
+  # Temporarily removed to resolve web dependency conflicts; re-add later with compatible versions
+  # firebase_messaging: ^14.7.10
+  cloud_functions: ^4.7.6
 
 dev_dependencies:
   flutter_test:
@@ -120,7 +122,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   mockito: ^5.4.4
   build_runner: ^2.4.7
-  firebase_core_platform_interface: ^6.0.2
+  # Remove direct platform interface; FlutterFire manages this
 
 flutter:
   uses-material-design: true

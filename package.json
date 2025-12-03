@@ -2,5 +2,20 @@
   "dependencies": {
     "@dataconnect/generated": "file:src/dataconnect-generated",
     "firebase": "^12.4.0"
+  },
+  "devDependencies": {
+    "firebase-admin": "^12.5.0"
+  },
+  "scripts": {
+    "seed:contact": "node scripts/seed_contact.js"
+  }
+  ,
+  "optionalDependencies": {
+    "@opentelemetry/sdk-node": "^0.52.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.52.1"
+  }
+  ,
+  "scripts": {
+    "eval:seed": "node evaluation/collect.js"
   }
 }

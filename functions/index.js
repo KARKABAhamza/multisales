@@ -12,6 +12,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { z } = require('zod');
 const { google } = require('googleapis');
 const sgMail = require('@sendgrid/mail');
 
@@ -383,3 +384,82 @@ function truncate(s, max) {
   if (!s) return s;
   return s.length > max ? s.slice(0, max - 1) + '…' : s;
 }
+
+// Schema validation for settings/contact payload
+const ContactSettingsSchema = z.object({
+  phone: z.string().min(3),
+  email: z.string().email(),
+  address: z.string().optional(),
+  hours: z.string().optional(),
+});
+
+/**
+ * seedContact (HTTPS)
+ * Validates payload and writes settings/contact document
+ */
+exports.seedContact = functions.https.onRequest(async (req, res) => {
+  try {
+    // Only allow authenticated admins/managers
+    const authHeader = req.headers.authorization || '';
+    const token = (authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null);
+    if (!token) {
+      return res.status(401).send({ ok: false, error: 'Unauthorized' });
+    }
+    let decoded;
+    try {
+      decoded = await admin.auth().verifyIdToken(token);
+    } catch (e) {
+      return res.status(401).send({ ok: false, error: 'Invalid token' });
+    }
+    const role = (decoded.role || (decoded.roles && (decoded.roles.admin ? 'admin' : decoded.roles.manager ? 'manager' : null)));
+    const isAllowed = role === 'admin' || role === 'manager' || (decoded.admin === true);
+    if (!isAllowed) {
+      return res.status(403).send({ ok: false, error: 'Forbidden' });
+    }
+
+    const parsed = ContactSettingsSchema.safeParse(req.body || {});
+    if (!parsed.success) {
+      return res.status(400).send({ ok: false, error: 'Invalid payload', issues: parsed.error.issues });
+    }
+    await admin.firestore().doc('settings/contact').set(parsed.data, { merge: true });
+    res.status(200).send({ ok: true });
+  } catch (e) {
+    res.status(500).send({ ok: false, error: String(e) });
+  }
+});
+
+/**
+ * setUserClaims (callable)
+ * Allows an admin to set custom claims on a target user.
+ * Input: { uid: string, role?: 'admin'|'manager'|'user', roles?: { admin?: boolean, manager?: boolean } }
+ */
+exports.setUserClaims = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Authentication required.');
+  }
+  const caller = context.auth.token;
+  const isAdmin = caller.role === 'admin' || (caller.roles && caller.roles.admin === true) || caller.admin === true;
+  if (!isAdmin) {
+    throw new functions.https.HttpsError('permission-denied', 'Admin privileges required.');
+  }
+
+  const uid = String(data?.uid || '').trim();
+  const role = data?.role;
+  const roles = data?.roles || {};
+  if (!uid) {
+    throw new functions.https.HttpsError('invalid-argument', 'Target uid is required.');
+  }
+
+  const claims = {};
+  if (role) claims.role = role;
+  if (roles && typeof roles === 'object') claims.roles = roles;
+
+  try {
+    await admin.auth().setCustomUserClaims(uid, claims);
+    logger.info('setUserClaims: updated', { uid, claims });
+    return { ok: true };
+  } catch (e) {
+    logger.error('setUserClaims: failed', { error: String(e), uid });
+    throw new functions.https.HttpsError('internal', 'Failed to set claims.');
+  }
+});

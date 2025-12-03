@@ -65,11 +65,50 @@ jobs:
           name: functions-test-results
           path: test-results/junit.xml
 
+  codacy-analysis:
+    name: Codacy Analysis (after functions tests)
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Analyze repository (SARIF)
+        run: |
+          if [ -n "${{ secrets.CODACY_API_TOKEN }}" ]; then
+            export CODACY_API_TOKEN='${{ secrets.CODACY_API_TOKEN }}'
+          fi
+          npx @codacy/cli analyze --format sarif --output codacy-results.sarif --fail-on-issues false || true
+
+      - name: Analyze repository (text)
+        run: |
+          if [ -n "${{ secrets.CODACY_API_TOKEN }}" ]; then
+            export CODACY_API_TOKEN='${{ secrets.CODACY_API_TOKEN }}'
+          fi
+          npx @codacy/cli analyze --format text --output codacy-results.txt --fail-on-issues false || true
+
+      - name: Upload Codacy Text Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codacy-results-text
+          path: codacy-results.txt
+
+      - name: Upload Codacy SARIF
+        uses: actions/upload-artifact@v4
+        with:
+          name: codacy-results-sarif
+          path: codacy-results.sarif
+
   deploy-functions:
     name: Deploy Functions (optional)
     runs-on: ubuntu-latest
     needs: lint-and-test
-    if: github.ref == 'refs/heads/main' && (secrets.FIREBASE_SERVICE_ACCOUNT != '')
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,45 +119,54 @@ jobs:
           node-version: 18
 
       - name: Install firebase-tools
-        run: npm install -g firebase-tools@latest
+        run: |
+          FIREBASE_SERVICE_ACCOUNT='${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          FIREBASE_PROJECT_ID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ] && [ -n "$FIREBASE_PROJECT_ID" ]; then
+            npm install -g firebase-tools@latest
+          else
+            echo "Skipping firebase-tools install: missing FIREBASE_SERVICE_ACCOUNT or FIREBASE_PROJECT_ID"
+          fi
 
       - name: Configure service account
-        env:
-          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "$FIREBASE_SA" > /tmp/firebase-sa.json
-          gcloud_auth() { echo 'service account available'; }
+          FIREBASE_SERVICE_ACCOUNT='${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
+            gcloud_auth() { echo 'service account available'; }
+          else
+            echo "Skipping service account config: FIREBASE_SERVICE_ACCOUNT not set"
+          fi
 
       - name: Authenticate Firebase CLI
-        env:
-          GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          # Use the service account JSON to authenticate firebase-tools
-          firebase login:ci --no-localhost || true
-          export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
+          FIREBASE_PROJECT_ID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          if [ -n "$FIREBASE_PROJECT_ID" ]; then
+            # Use the service account JSON to authenticate firebase-tools
+            firebase login:ci --no-localhost || true
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
+          else
+            echo "Skipping Firebase auth: FIREBASE_PROJECT_ID not set"
+          fi
 
       - name: Deploy functions
-        env:
-          FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          cd functions
-          npm ci
-          # Optional: run smoke tests here
-          npx firebase-tools deploy --only functions --project "$FIREBASE_PROJECT" --force
+          FIREBASE_SERVICE_ACCOUNT='${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          FIREBASE_PROJECT_ID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ] && [ -n "$FIREBASE_PROJECT_ID" ]; then
+            cd functions
+            npm ci
+            # Optional: run smoke tests here
+            npx firebase-tools deploy --only functions --project "$FIREBASE_PROJECT_ID" --force
+          else
+            echo "Skipping deploy: missing FIREBASE_SERVICE_ACCOUNT or FIREBASE_PROJECT_ID"
+          fi
 
       - name: Post-deploy notice
-        run: echo "Functions deployed to ${{ secrets.FIREBASE_PROJECT_ID }}"
-
-# Notes:
-# - The deploy step is conditional: it runs only on main and if a service account is provided in
-#   the repository secrets as JSON text under `FIREBASE_SERVICE_ACCOUNT` and `FIREBASE_PROJECT_ID`.
-# - For security, prefer using OIDC + Google Cloud workload identity or a short-lived token rather
-#   than storing long-lived service account JSON in secrets. The workflow above uses a simple
-#   service-account approach for portability.
-# - Ensure `functions/package.json` includes `lint` and `test` scripts; otherwise lint/test steps will be skipped or will no-op.
-# - Add SendGrid secrets to the repository secrets if you want the Cloud Functions deployment to be able to send emails from CI (or set them in Functions runtime config via `firebase functions:config:set`).
-# Required secrets (if you want deploy):
-# - FIREBASE_SERVICE_ACCOUNT: base64-encoded or raw JSON of a service account with Cloud Functions deploy permission
-# - FIREBASE_PROJECT_ID: GCP project id (e.g. multisales-18e57)
-# Optional (for emails):
-# - SENDGRID_API_KEY, SENDGRID_FROM, SENDGRID_TO
+        run: |
+          FIREBASE_PROJECT_ID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          if [ -n "$FIREBASE_PROJECT_ID" ]; then
+            echo "Functions deployed to $FIREBASE_PROJECT_ID"
+          else
+            echo "No deploy executed"
+          fi
