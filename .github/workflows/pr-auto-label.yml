@@ -41,7 +41,11 @@ jobs:
             gh pr edit $PR_NUMBER --add-label "tests"
           fi
           
-          if echo "$CHANGED_FILES" | grep -q "^docs/\|\.md$"; then
+          if echo "$CHANGED_FILES" | grep -q "^docs/"; then
+            gh pr edit $PR_NUMBER --add-label "documentation"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "\.md$"; then
             gh pr edit $PR_NUMBER --add-label "documentation"
           fi
           
@@ -83,10 +87,8 @@ jobs:
             gh pr edit $PR_NUMBER --add-label "size/L"
           else
             gh pr edit $PR_NUMBER --add-label "size/XL"
-            # Comment if PR is very large
-            if [ $TOTAL_CHANGES -gt 1000 ]; then
-              gh pr comment $PR_NUMBER --body "⚠️ This PR is quite large ($TOTAL_CHANGES lines changed). Consider breaking it into smaller PRs for easier review."
-            fi
+            # Comment on very large PRs to suggest breaking them up
+            gh pr comment $PR_NUMBER --body "⚠️ This PR is quite large ($TOTAL_CHANGES lines changed). Consider breaking it into smaller PRs for easier review."
           fi
 
       - name: Check for breaking changes

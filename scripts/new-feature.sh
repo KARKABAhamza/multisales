@@ -33,7 +33,12 @@ git checkout -b "${BRANCH_NAME}"
 # If issue number provided, assign to yourself
 if [ -n "$ISSUE_NUMBER" ]; then
   echo "Assigning issue #${ISSUE_NUMBER} to you..."
-  gh issue develop "${ISSUE_NUMBER}" --name "${BRANCH_NAME}" 2>/dev/null || echo "Note: Could not auto-assign issue (you may need to assign manually)"
+  if ! gh issue develop "${ISSUE_NUMBER}" --name "${BRANCH_NAME}" 2>/dev/null; then
+    echo "Note: Could not auto-assign issue. Possible reasons:"
+    echo "  - Issue #${ISSUE_NUMBER} doesn't exist"
+    echo "  - You don't have permissions"
+    echo "  - GitHub CLI is not authenticated (run 'gh auth login')"
+  fi
 fi
 
 echo "✅ Branch created successfully: ${BRANCH_NAME}"
