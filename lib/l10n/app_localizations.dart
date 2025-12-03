@@ -414,9 +414,26 @@ abstract class AppLocalizations {
   String get menuHome;
   String get menuExpertise;
   String get menuServices;
+  String get menuAdmin;
   String get menuAbout;
   String get menuContact;
   String get menuLogin;
+
+  // Contact Page
+  String get contactHeroSubtitle;
+  String get contactFormTitle;
+  String get contactSubject;
+  String get subjectGeneral;
+  String get subjectSupport;
+  String get subjectSales;
+  String get contactMessage;
+  String get pleaseEnterMessage;
+  String get contactSent;
+  String get contactSend;
+  String get locationTitle;
+  String get businessHoursTitle;
+  String get closedLabel;
+  String get pleaseEnterFirstName;
 
   /// Section title for the logos/products grid
   String get sectionWhatWeSell;

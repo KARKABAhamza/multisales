@@ -1,0 +1,16 @@
+{
+  "contact_form": [
+    {"fullName": "Alice Martin", "email": "alice@example.com", "subject": "general", "message": "Je souhaite des informations sur vos services."},
+    {"fullName": "Bob Durand", "email": "bob@example.com", "subject": "sales", "message": "Pouvez-vous fournir un devis pour 100 unités ?"},
+    {"fullName": "", "email": "carol@example.com", "subject": "support", "message": "Problème avec la livraison."},
+    {"fullName": "David Test", "email": "invalid-email", "subject": "general", "message": "Email invalide de test."},
+    {"fullName": "Eve", "email": "eve@example.com", "subject": "support", "message": ""}
+  ],
+  "admin_route": [
+    {"userEmail": "admin@multisales.com", "expect": "allow"},
+    {"userEmail": "user@gmail.com", "expect": "deny"}
+  ],
+  "seed_script": [
+    {"phone": "+212 6 11 22 33 44", "email": "ops@multisales.com", "address": "42 bd Exemple, Casa", "hours": "Mon–Fri 8:30–17:30"}
+  ]
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multisales_app/presentation/widgets/radio_choice_chip.dart';
 import '../../core/utils/responsive_layout.dart';
 
 /// Interactive data table with sorting, filtering, and selection
@@ -322,9 +323,8 @@ class _ResponsiveFormBuilderState extends State<ResponsiveFormBuilder> {
           runSpacing: 8,
           children: field.options?.map((option) {
                 final isSelected = option.value == selected;
-                return _FormRadioChip(
+                return RadioChoiceChip(
                   label: option.label,
-                  value: option.value,
                   selected: isSelected,
                   onTap: () => setState(() => _formData[field.key] = option.value),
                 );
@@ -413,40 +413,7 @@ class _ResponsiveFormBuilderState extends State<ResponsiveFormBuilder> {
   }
 }
 
-class _FormRadioChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool selected;
-  final VoidCallback onTap;
-  const _FormRadioChip({required this.label, required this.value, required this.selected, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? Theme.of(context).colorScheme.primary.withOpacity(0.12) : Colors.transparent,
-          border: Border.all(color: selected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(selected ? Icons.radio_button_checked : Icons.radio_button_off,
-                size: 18,
-                color: selected ? Theme.of(context).colorScheme.primary : Colors.grey),
-            const SizedBox(width: 6),
-            Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: selected ? Theme.of(context).colorScheme.primary : null)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// Replaced by generic RadioChoiceChip
 
 /// Form field configuration
 class FormFieldConfig {

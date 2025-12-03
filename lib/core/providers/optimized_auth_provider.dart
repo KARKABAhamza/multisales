@@ -13,6 +13,7 @@ class OptimizedAuthProvider with ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get isAdmin => _authService.isAdminEmail();
 
   void setAuthenticated(bool value) {
     if (_isAuthenticated == value) return;

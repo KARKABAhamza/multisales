@@ -11,6 +11,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'core/providers/contact_provider.dart';
 import 'core/providers/messaging_provider.dart';
 import 'core/providers/storage_upload_provider.dart';
+import 'core/providers/product_provider.dart';
+import 'core/providers/order_provider.dart';
+import 'core/providers/review_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,10 @@ class MultiSalesApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MessagingProvider()),
         // Storage upload (signed URL) provider
         ChangeNotifierProvider(create: (_) => StorageUploadProvider()),
+        // Domain providers
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, lang, _) => MaterialApp.router(

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../widgets/layout/main_scaffold.dart';
 import '../widgets/forms/custom_form_fields.dart';
 import '../widgets/buttons/custom_buttons.dart';
+import 'package:multisales_app/presentation/widgets/radio_choice_chip.dart';
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({super.key});
@@ -128,8 +129,20 @@ class _MeetingScreenState extends State<MeetingScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(child: _MeetingTypeOption(label: 'In-Person', value: 'In-Person', selected: _meetingType, onChanged: _setMeetingType)),
-                  Expanded(child: _MeetingTypeOption(label: 'Virtual', value: 'Virtual', selected: _meetingType, onChanged: _setMeetingType)),
+                  Expanded(
+                    child: RadioChoiceChip(
+                      label: 'In-Person',
+                      selected: _meetingType == 'In-Person',
+                      onTap: () => _setMeetingType('In-Person'),
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioChoiceChip(
+                      label: 'Virtual',
+                      selected: _meetingType == 'Virtual',
+                      onTap: () => _setMeetingType('Virtual'),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -389,36 +402,4 @@ class _MeetingScreenState extends State<MeetingScreen> {
   }
 }
 
-class _MeetingTypeOption extends StatelessWidget {
-  final String label;
-  final String value;
-  final String selected;
-  final ValueChanged<String> onChanged;
-  const _MeetingTypeOption({required this.label, required this.value, required this.selected, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = value == selected;
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () => onChanged(value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(8),
-          color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey),
-            const SizedBox(width: 6),
-            Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// Replaced by generic RadioChoiceChip

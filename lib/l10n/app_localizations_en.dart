@@ -179,11 +179,43 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get menuServices => 'Services';
   @override
+  String get menuAdmin => 'Admin';
+  @override
   String get menuAbout => 'À propos';
   @override
   String get menuContact => 'Contact';
   @override
   String get menuLogin => 'Connexion';
+
+  // Contact Page
+  @override
+  String get contactHeroSubtitle => 'Prêt à échanger ? Dites-nous en plus sur votre besoin.';
+  @override
+  String get contactFormTitle => 'Formulaire de contact';
+  @override
+  String get contactSubject => 'Objet / Raison du contact';
+  @override
+  String get subjectGeneral => 'Demande générale';
+  @override
+  String get subjectSupport => 'Support technique';
+  @override
+  String get subjectSales => 'Demande commerciale';
+  @override
+  String get contactMessage => 'Message';
+  @override
+  String get pleaseEnterMessage => 'Veuillez saisir votre message';
+  @override
+  String get contactSent => 'Message envoyé';
+  @override
+  String get contactSend => 'Envoyer';
+  @override
+  String get locationTitle => 'Localisation';
+  @override
+  String get businessHoursTitle => "Horaires d'ouverture";
+  @override
+  String get closedLabel => 'Fermé';
+  @override
+  String get pleaseEnterFirstName => 'Veuillez saisir votre nom';
 
   // Logos / What we sell
   @override

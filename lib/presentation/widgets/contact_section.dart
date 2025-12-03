@@ -20,12 +20,10 @@ class _ContactSectionState extends State<ContactSection> {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _messageCtrl = TextEditingController();
+  bool _sendCopy = false;
 
   // Contact data (change if needed)
-  static const _phone = '+212 784007410';
-  static const _email = 'contact@multisales.ma';
-  static const _address = '49 boulevard CHEFCHAOUNI II, Ain Sébaâ, Casablanca Maroc';
-  static const _hours = 'Lun–Ven 08:30 – 18:00';
+  // Contact data moved to provider (loaded dynamically). Keep no hard-coded values here.
 
   @override
   void dispose() {
@@ -36,7 +34,8 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Future<void> _launchPhone() async {
-    final uri = Uri(scheme: 'tel', path: _phone);
+    final phone = context.read<ContactProvider>().info.phone;
+    final uri = Uri(scheme: 'tel', path: phone);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
@@ -45,9 +44,10 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Future<void> _launchEmail() async {
+    final email = context.read<ContactProvider>().info.email;
     final uri = Uri(
       scheme: 'mailto',
-      path: _email,
+      path: email,
       queryParameters: {'subject': 'Demande depuis MULTISALES'},
     );
     if (await canLaunchUrl(uri)) {
@@ -76,6 +76,7 @@ class _ContactSectionState extends State<ContactSection> {
       name: _nameCtrl.text.trim(),
       email: _emailCtrl.text.trim(),
       message: _messageCtrl.text.trim(),
+      sendCopy: _sendCopy,
     );
 
     if (ok) {
@@ -145,6 +146,13 @@ class _ContactSectionState extends State<ContactSection> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure contact info is loaded once after widget mounts
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final prov = context.read<ContactProvider>();
+      if (!prov.isInfoLoading && (prov.info.email.isEmpty && prov.info.phone.isEmpty)) {
+        prov.loadContactInfo();
+      }
+    });
     final isWide = MediaQuery.of(context).size.width >= 900;
     final provider = context.watch<ContactProvider>();
     return Padding(
@@ -201,20 +209,31 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Widget _leftColumn() {
+    final provider = context.watch<ContactProvider>();
+    if (provider.isInfoLoading) {
+      // Show small skeleton/spinner while loading contact info
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    final info = provider.info;
     return Column(
       children: [
         _infoCard(
           icon: Icons.location_on_outlined,
           title: 'Adresse',
           child: Text(
-            _address,
+            info.address,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
                 ?.copyWith(color: Theme.of(context).textTheme.bodyMedium?.color),
           ),
           onTap: () async {
-            final query = Uri.encodeComponent(_address);
+            final query = Uri.encodeComponent(info.address);
             final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$query');
             if (await canLaunchUrl(uri)) await launchUrl(uri);
           },
@@ -225,13 +244,13 @@ class _ContactSectionState extends State<ContactSection> {
           title: 'Téléphone',
           child: Row(children: [
             SelectableText(
-              _phone,
+              info.phone,
               style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
             ),
             const SizedBox(width: 8),
             IconButton(onPressed: _launchPhone, icon: const Icon(Icons.call, color: Colors.green)),
             IconButton(
-              onPressed: () => _copyToClipboard(_phone, 'Numéro'),
+              onPressed: () => _copyToClipboard(info.phone, 'Numéro'),
               icon: Icon(
                 Icons.copy,
                 size: 18,
@@ -253,14 +272,14 @@ class _ContactSectionState extends State<ContactSection> {
           child: Row(children: [
             Flexible(
               child: SelectableText(
-                _email,
+                info.email,
                 style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
               ),
             ),
             const SizedBox(width: 8),
             IconButton(onPressed: _launchEmail, icon: Icon(Icons.send, color: DesignTokens.primary)),
             IconButton(
-              onPressed: () => _copyToClipboard(_email, 'Email'),
+              onPressed: () => _copyToClipboard(info.email, 'Email'),
               icon: Icon(
                 Icons.copy,
                 size: 18,
@@ -280,7 +299,7 @@ class _ContactSectionState extends State<ContactSection> {
           icon: Icons.access_time_outlined,
           title: 'Horaires',
           child: Text(
-            _hours,
+            info.hours,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
@@ -353,6 +372,17 @@ class _ContactSectionState extends State<ContactSection> {
               decoration: const InputDecoration(labelText: 'Message', prefixIcon: Icon(Icons.message)),
               maxLines: 6,
               validator: (v) => (v == null || v.trim().length < 10) ? 'Message trop court' : null,
+            ),
+            const SizedBox(height: 12),
+            CheckboxListTile(
+              value: _sendCopy,
+              onChanged: (v) {
+                setState(() {
+                  _sendCopy = v ?? false;
+                });
+              },
+              title: const Text("M'envoyer une copie par email"),
+              controlAffinity: ListTileControlAffinity.leading,
             ),
             const SizedBox(height: 12),
             ElevatedButton.icon(

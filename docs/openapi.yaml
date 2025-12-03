@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: MultiSales Backend API
+  version: 0.1.0
+  description: Minimal skeleton for admin and settings endpoints
+servers:
+  - url: https://{project}.cloudfunctions.net
+    variables:
+      project:
+        default: multisales-18e57
+paths:
+  /admin/seedContact:
+    post:
+      summary: Seed settings/contact
+      description: Writes contact settings document using admin privileges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+                hours:
+                  type: string
+              required: [phone, email]
+      responses:
+        '200':
+          description: Seeded successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Server error
