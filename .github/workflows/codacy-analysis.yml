@@ -10,6 +10,9 @@ jobs:
   codacy:
     name: Codacy Static Analysis
     runs-on: ubuntu-latest
+    env:
+      CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,13 +28,16 @@ jobs:
           curl -Ls https://coverage.codacy.com/get.sh | bash
 
       - name: Run Codacy Analysis
-        env:
-          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
         run: |
           codacy-analysis-cli analyze \
             --directory . \
             --verbose \
             --output results.json || true
+
+      - name: Run Codacy Coverage Reporter
+        run: |
+          # Run the coverage reporter; tolerate failures so CI won't be blocked by reporting issues
+          codacy-coverage-reporter report || true
 
       - name: Upload results artifact
         uses: actions/upload-artifact@v4
