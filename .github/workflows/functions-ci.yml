@@ -24,7 +24,7 @@ jobs:
         working-directory: functions
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: functions-test-results
           path: test-results/junit.xml
@@ -71,7 +71,7 @@ jobs:
     needs: lint-and-test
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -93,13 +93,13 @@ jobs:
           npx @codacy/cli analyze --format text --output codacy-results.txt --fail-on-issues false || true
 
       - name: Upload Codacy Text Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: codacy-results-text
           path: codacy-results.txt
 
       - name: Upload Codacy SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: codacy-results-sarif
           path: codacy-results.sarif
@@ -111,7 +111,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
