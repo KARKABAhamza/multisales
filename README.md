@@ -11,11 +11,12 @@ A multi-platform sales application built with Flutter and Firebase.
 
 A multi-platform sales application built with Flutter and Firebase.
 
+## CI Trigger Note
+
+Minor README touch to kick off CI on feat/functions-tests (2025-12-02).
+
 ## Architecture
 
-- MVP backend: Firebase (Firestore + Storage + Cloud Functions)
-- UI: Flutter Widgets + GoRouter, no business logic in Widgets
-- State/Logic: Provider pattern (`ChangeNotifier`) in `lib/core/providers/`, services in `lib/core/services/`
 - Data: Firestore collections and indexes, Storage for media, Functions for triggers/callables/scheduled jobs
 
 Details and the future migration path to Postgres/Supabase are documented in `docs/ARCHITECTURE.md` and the ADR `docs/architecture/adr-001-firebase-mvp.md`.

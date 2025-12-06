@@ -1,6 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(role) {
+      return request.auth.token.role == role || (request.auth.token.roles != null && request.auth.token.roles[role] == true);
+    }
+
+    function isAdminOrManager() {
+      return hasRole('admin') || hasRole('manager');
+    }
 
     // Users can only access their own user document
     match /users/{userId} {
@@ -36,17 +47,10 @@ service cloud.firestore {
         request.auth.token.role == 'admin';
     }
 
-    // Public contact form submissions: allow create with basic validation, deny read/update/delete
-    match /contacts/{contactId} {
-      allow create: if
-        request.resource.data.name is string &&
-        request.resource.data.email is string &&
-        request.resource.data.message is string &&
-        request.resource.data.name.size() > 0 &&
-        request.resource.data.email.size() > 5 &&
-        request.resource.data.message.size() > 0 &&
-        request.time != null;
-      allow read, update, delete: if false;
+    // Settings - allow authenticated reads; restrict writes to admins/managers
+    match /settings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdminOrManager();
     }
 
     // General rule: deny all other access

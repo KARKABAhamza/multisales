@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../l10n/app_localizations.dart';
 import '../../design/design_tokens.dart';
+import 'package:provider/provider.dart';
+import '../../core/providers/optimized_auth_provider.dart';
 
 class SarlauAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showActions;
@@ -44,6 +46,11 @@ class SarlauAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _NavBtn(label: t.menuExpertise, route: '/expertise', color: onPrimary),
                   _NavBtn(label: t.menuServices, route: '/services', color: onPrimary),
                   _NavBtn(label: t.menuContact, route: '/contact', color: onPrimary),
+                  _NavBtn(label: 'Privacy', route: '/privacy', color: onPrimary),
+                  _NavBtn(label: 'Terms', route: '/terms', color: onPrimary),
+                  // Show Admin link only for admin users
+                  if (context.select<OptimizedAuthProvider, bool>((p) => p.isAdmin))
+                    _NavBtn(label: t.menuAdmin, route: '/admin', color: onPrimary),
                   const SizedBox(width: 12),
                 ]
               : null,

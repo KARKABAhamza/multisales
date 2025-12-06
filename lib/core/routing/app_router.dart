@@ -6,6 +6,9 @@ import '../../pages/about_page.dart';
 import '../../pages/services_page.dart';
 import '../../pages/contact_page.dart';
 import '../../pages/expertise_page.dart';
+import '../../pages/privacy_page.dart';
+import '../../pages/terms_page.dart';
+import '../../pages/admin_claims_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -38,6 +41,21 @@ class AppRouter {
         path: '/expertise',
         name: 'expertise',
         builder: (context, state) => ExpertisePage(),
+      ),
+      GoRoute(
+        path: '/privacy',
+        name: 'privacy',
+        builder: (context, state) => const PrivacyPage(),
+      ),
+      GoRoute(
+        path: '/terms',
+        name: 'terms',
+        builder: (context, state) => const TermsPage(),
+      ),
+      GoRoute(
+        path: '/admin/claims',
+        name: 'admin_claims',
+        builder: (context, state) => const AdminClaimsPage(),
       ),
     ],
     errorBuilder: (context, state) => ErrorScreen(error: state.error),

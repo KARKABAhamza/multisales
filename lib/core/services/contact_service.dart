@@ -7,7 +7,7 @@ class ContactService {
   FirebaseFirestore get _db => FirebaseFirestore.instance;
   final _network = NetworkService();
 
-  Future<void> submitContact({required String name, required String email, required String message}) async {
+  Future<void> submitContact({required String name, required String email, required String message, bool sendCopy = false}) async {
     // Prefer calling the Cloud Function which saves the contact and sends an email via SendGrid.
     await _network.ensureOnline();
 
@@ -17,6 +17,7 @@ class ContactService {
         'name': name,
         'email': email,
         'message': message,
+        'sendCopy': sendCopy,
       }).timeout(const Duration(seconds: 15));
     } on FirebaseFunctionsException catch (e) {
       // Fallback: if function not deployed, save to Firestore to avoid losing the message
@@ -25,6 +26,7 @@ class ContactService {
           'name': name,
           'email': email,
           'message': message,
+          'sendCopy': sendCopy,
           'createdAt': FieldValue.serverTimestamp(),
           'status': 'new',
           'source': 'web-fallback',
@@ -34,5 +36,12 @@ class ContactService {
         rethrow;
       }
     }
+  }
+
+  /// Save the contact settings document used by the frontend.
+  /// `data` should contain keys: phone, email, address, hours
+  Future<void> saveSettingsContact({required Map<String, dynamic> data, String path = 'settings/contact'}) async {
+    await _network.ensureOnline();
+    await _db.doc(path).set(data, SetOptions(merge: true));
   }
 }
